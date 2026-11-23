@@ -959,6 +959,7 @@ $('#clearCache').addEventListener('click', async () => {
   toast('Lookup cache cleared', 'info');
 });
 void refreshKeyUi();
+document.getElementById('version')!.textContent = 'v' + browser.runtime.getManifest().version;
 void refreshStationUi();
 // First time the extension is opened each day: refresh the station list (a single request on a normal day).
 void ensureDailySync().then(() => Promise.all([refreshStationUi(), refreshKeyUi()]));

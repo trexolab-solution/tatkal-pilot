@@ -20,7 +20,9 @@ Built by Pintu Prajapati.
 
 ## Install
 
-Requires Node.js 20 or newer.
+**Ready-made build:** download `tatkal-pilot-<version>-chrome.zip` from the [Releases](../../releases) page, unzip it, then in `chrome://extensions` turn on **Developer mode**, choose **Load unpacked** and select the unzipped folder.
+
+**Build it yourself:** requires Node.js 20 or newer.
 
 ```sh
 npm install
@@ -52,3 +54,14 @@ An unofficial tool, not affiliated with IRCTC or Indian Railways. Use it within 
 ## Data
 
 Built-in lists: Datameet (CC0). Station updates: India API (CC BY-SA 4.0).
+
+## Releases
+
+Versions follow `MAJOR.MINOR.PATCH`. To publish one: bump `version` in `package.json`, commit, then push a matching tag:
+
+```sh
+git tag v1.0.1
+git push origin v1.0.1
+```
+
+A GitHub Action builds the extension and attaches the zip to a new release.

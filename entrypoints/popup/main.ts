@@ -185,6 +185,7 @@ $('manage').addEventListener('click', () => {
 $('new').addEventListener('click', () => openOptions('#new'));
 $('createFirst').addEventListener('click', () => openOptions('#new'));
 
+document.getElementById('version')!.textContent = browser.runtime.getManifest().version;
 void ensureDailySync().catch(() => undefined); // first open of the day refreshes the station list
 void getStore().then((s) => {
   store = s;
