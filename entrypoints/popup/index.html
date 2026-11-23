@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IRCTC Autofill</title>
+    <meta name="manifest.type" content="browser_action" />
+    <link rel="icon" href="/icon/32.png" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header class="head">
+      <img class="logo" src="/icon/48.png" width="24" height="24" alt="" />
+      <h1>IRCTC Autofill</h1>
+      <span class="chip">Tatkal</span>
+    </header>
+
+    <section id="none" class="empty" hidden>
+      <h2>No bookings yet</h2>
+      <p>Save your Tatkal booking once, then start it from the IRCTC page.</p>
+      <button id="createFirst" type="button" class="btn primary block">Create a booking</button>
+    </section>
+
+    <div id="main" hidden>
+      <div class="section-head">
+        <h2 id="listLabel" class="lbl">Bookings</h2>
+        <span id="count" class="count"></span>
+      </div>
+      <ul id="blist" class="blist" aria-labelledby="listLabel"></ul>
+
+      <p id="site" class="site" role="status" aria-live="polite"></p>
+
+      <button id="action" type="button" class="btn block" hidden></button>
+      <a id="openIrctc" class="btn block link-btn" href="https://www.irctc.co.in/eticket/train-search" target="_blank" rel="noreferrer noopener" hidden>
+        Open IRCTC website
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3.5H3.5v9h9v-3M9 3h4v4M13 3L7.5 8.5" /></svg>
+      </a>
+      <button id="stop" type="button" class="btn block danger" hidden>Stop run</button>
+      <p id="msg" class="msg" role="status" aria-live="polite"></p>
+    </div>
+
+    <footer class="foot">
+      <button id="manage" type="button" class="btn">
+        <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6.2 4.5h7.3M6.2 8h7.3M6.2 11.5h7.3" /><path d="M2.6 4.5h.01M2.6 8h.01M2.6 11.5h.01" stroke-width="2.2" /></svg>
+        Manage
+      </button>
+      <button id="new" type="button" class="btn primary">
+        <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 3v10M3 8h10" /></svg>
+        New booking
+      </button>
+    </footer>
+    <p class="credit">Built by Pintu Prajapati</p>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

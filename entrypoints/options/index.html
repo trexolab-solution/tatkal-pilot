@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IRCTC Autofill – Bookings</title>
+    <meta name="manifest.open_in_tab" content="true" />
+    <link rel="icon" href="/icon/32.png" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <h1>IRCTC Autofill</h1>
+        <span class="chip">Tatkal</span>
+        <nav class="tabs" aria-label="Sections">
+          <button id="tabBookings" type="button" class="tab" aria-current="page">Bookings</button>
+          <button id="tabSettings" type="button" class="tab">Settings</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- ===== Bookings list ===== -->
+    <main id="listView" class="wrap narrow">
+      <div class="view-head">
+        <div>
+          <h2 class="view-title">Bookings <span id="count" class="count-pill"></span></h2>
+          <p class="lede">Your saved Tatkal bookings. On the IRCTC page, pick the one to run and press Start.</p>
+        </div>
+        <button id="newBtn" type="button" class="btn primary">
+          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+          New booking
+        </button>
+      </div>
+
+      <ul id="cards" class="cards" aria-label="Saved bookings"></ul>
+
+      <div id="emptyList" class="empty-state" hidden>
+        <h3>No bookings yet</h3>
+        <p>Add the train, route and passengers for your next Tatkal ticket. You can save several and switch between them.</p>
+        <button id="emptyNew" type="button" class="btn primary">Create your first booking</button>
+      </div>
+    </main>
+
+    <!-- ===== Settings ===== -->
+    <main id="settingsView" class="wrap narrow" hidden>
+      <div class="view-head">
+        <div>
+          <h2 class="view-title">Settings</h2>
+        </div>
+      </div>
+
+      <section class="panel" aria-labelledby="h-stations">
+        <h3 id="h-stations">Stations</h3>
+        <div class="set-row">
+          <div class="set-text">
+            <strong id="stationCount"></strong>
+            <span class="help" id="stationStatus" aria-live="polite"></span>
+          </div>
+          <button id="syncStations" type="button" class="btn">Update now</button>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="h-trains">
+        <h3 id="h-trains">Trains</h3>
+        <div class="set-row">
+          <div class="set-text">
+            <strong id="trainCount"></strong>
+            <span class="help">Learned from IRCTC, plus a built-in list.</span>
+          </div>
+          <button id="clearCache" type="button" class="btn">Clear cache</button>
+        </div>
+
+        <details id="keyBox" class="more">
+          <summary>
+            <span class="more-title">RailCore key</span>
+            <span class="more-hint">Optional</span>
+            <svg class="more-chev" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5l4 4 4-4" /></svg>
+          </summary>
+          <div class="more-body">
+            <label class="sr-only" for="railKey">RailCore API key</label>
+            <div class="keyrow">
+              <input id="railKey" type="password" autocomplete="off" placeholder="API key" />
+              <button id="saveKey" type="button" class="btn">Save</button>
+              <button id="removeKey" type="button" class="btn">Remove</button>
+            </div>
+            <p class="help" id="keyStatus" aria-live="polite"></p>
+            <p class="help"><a href="https://railcore.tech/dashboard?view=developer&amp;section=keys" target="_blank" rel="noreferrer noopener">Get a free key</a></p>
+          </div>
+        </details>
+      </section>
+
+      <p class="fine-print">Built by Pintu Prajapati · Data: Datameet (CC0) and India API (CC BY-SA 4.0).</p>
+    </main>
+
+    <!-- ===== Booking editor ===== -->
+    <form id="form" class="wrap narrow editor" novalidate hidden>
+      <button id="back" type="button" class="crumb">
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        All bookings
+      </button>
+
+      <header class="ed-head">
+        <div class="ed-title">
+          <label class="sr-only" for="name">Booking name</label>
+          <input id="name" maxlength="60" autocomplete="off" placeholder="Untitled booking" />
+          <p id="edSub" class="sub-line"></p>
+          <span id="edTitle" hidden></span>
+        </div>
+        <div class="ed-actions">
+          <button id="dup" type="button" class="btn small">Duplicate</button>
+          <button id="del" type="button" class="btn small danger">Delete</button>
+        </div>
+      </header>
+
+      <div id="switchBanner" class="banner" role="alert" hidden>
+        <span>You have unsaved changes.</span>
+        <span class="banner-actions">
+          <button id="swSave" type="button" class="link">Save and continue</button>
+          <button id="swDiscard" type="button" class="link danger">Discard</button>
+          <button id="swStay" type="button" class="link muted">Stay here</button>
+        </span>
+      </div>
+
+      <section class="panel" aria-labelledby="h-journey">
+        <h3 id="h-journey">Journey</h3>
+        <div class="grid">
+          <div class="field full">
+            <label for="trainNo">Train number or name</label>
+            <input id="trainNo" autocomplete="off" placeholder="12004 or Shatabdi" aria-describedby="trainNo-info trainNo-err" />
+            <p class="info" id="trainNo-info" aria-live="polite"></p>
+            <p class="err" id="trainNo-err" role="alert"></p>
+          </div>
+          <div class="route full">
+          <div class="field">
+            <label for="from">From</label>
+            <input id="from" autocomplete="off" placeholder="Station name or code" aria-describedby="from-info from-err" />
+            <p class="info" id="from-info" aria-live="polite"></p>
+            <p class="err" id="from-err" role="alert"></p>
+          </div>
+          <button id="swap" type="button" class="icon-btn swap" title="Swap From and To" aria-label="Swap From and To">
+            <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h9.5M10 3l2.5 2.5L10 8M13 10.5H3.5M6 8l-2.5 2.5L6 13" /></svg>
+          </button>
+          <div class="field">
+            <label for="to">To</label>
+            <input id="to" autocomplete="off" placeholder="Station name or code" aria-describedby="to-info to-err" />
+            <p class="info" id="to-info" aria-live="polite"></p>
+            <p class="err" id="to-err" role="alert"></p>
+          </div>
+          </div>
+          <div class="field">
+            <label for="date">Journey date</label>
+            <input id="date" type="date" aria-describedby="date-err" />
+            <div class="quick" role="group" aria-label="Quick dates">
+              <button type="button" class="quick-btn" data-days="0">Today</button>
+              <button type="button" class="quick-btn" data-days="1">Tomorrow</button>
+              <button type="button" class="quick-btn" data-days="2">In 2 days</button>
+            </div>
+            <p class="err" id="date-err" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="cls">Class</label>
+            <select id="cls" aria-describedby="cls-err"></select>
+            <p class="err" id="cls-err" role="alert"></p>
+          </div>
+        </div>
+
+        <div class="start-row">
+          <label class="switch">
+            <input id="autoStart" type="checkbox" role="switch" />
+            <span class="track" aria-hidden="true"></span>
+            <span class="switch-text">
+              <strong>Search at Tatkal opening time</strong>
+              <span class="help" id="startNote"></span>
+            </span>
+          </label>
+          <button id="editStart" type="button" class="link" hidden>Change time</button>
+          <div id="startAtWrap" class="field" hidden>
+            <label for="startAt">Search at (HH:MM:SS)</label>
+            <input id="startAt" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="10:00:00" aria-describedby="startAt-err" />
+            <p class="err" id="startAt-err" role="alert"></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="h-pax">
+        <div class="panel-head">
+          <h3 id="h-pax">Passengers <span id="paxMeta" class="meta" aria-live="polite"></span></h3>
+          <button id="add" type="button" class="btn small">
+            <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+            Add passenger
+          </button>
+        </div>
+        <p class="help panel-help">Pick people from your IRCTC master list by name (full or partial), or enter a new passenger. If several saved passengers match, you choose one on the IRCTC page. Tatkal allows up to 4 per ticket.</p>
+        <p id="paxEmpty" class="empty">No passengers yet. Use “Add passenger” to start.</p>
+        <ol id="passengers" class="pax-list"></ol>
+        <p class="err" id="paxErr" role="alert"></p>
+      </section>
+
+      <section class="panel" aria-labelledby="h-prefs">
+        <h3 id="h-prefs">Booking options</h3>
+
+        <div class="settings">
+          <div class="set-row" role="group" aria-labelledby="payLabel">
+            <div class="set-text">
+              <strong id="payLabel">Payment</strong>
+              <span class="help">Chosen before Calculate Fare. UPI has the lower convenience fee.</span>
+            </div>
+            <div class="seg">
+              <label><input type="radio" name="payment" value="UPI" /><span>BHIM/UPI</span></label>
+              <label><input type="radio" name="payment" value="CARDS" /><span>Cards / Net banking</span></label>
+            </div>
+          </div>
+
+          <label class="set-row">
+            <span class="set-text">
+              <strong>Book only if a confirmed berth is available</strong>
+              <span id="confirmNote" class="help">Waitlist and RAC tickets are skipped. The ticket is booked only with a confirmed berth.</span>
+            </span>
+            <span class="tgl"><input id="confirmBerthSw" type="checkbox" role="switch" /><span class="track" aria-hidden="true"></span></span>
+          </label>
+
+          <label class="set-row">
+            <span class="set-text">
+              <strong>Consider for auto upgradation</strong>
+              <span class="help">Lets IRCTC move you to a higher class when seats are free.</span>
+            </span>
+            <span class="tgl"><input id="autoUpgradeSw" type="checkbox" role="switch" /><span class="track" aria-hidden="true"></span></span>
+          </label>
+
+          <label class="set-row">
+            <span class="set-text">
+              <strong>Also press Calculate Fare and Continue To Payment</strong>
+              <span class="help">Off by default. Pay &amp; Book is always yours to press.</span>
+            </span>
+            <span class="tgl"><input id="autoCalc" type="checkbox" role="switch" /><span class="track" aria-hidden="true"></span></span>
+          </label>
+        </div>
+
+        <details id="moreOpts" class="more">
+          <summary>
+            <span class="more-title">More options</span>
+            <span class="more-hint">Mobile number, preferred coach, GST</span>
+            <svg class="more-chev" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5l4 4 4-4" /></svg>
+          </summary>
+          <div class="more-body">
+            <div class="grid">
+              <div class="field full">
+                <label for="mobile">Mobile number <span class="opt">optional</span></label>
+                <input id="mobile" inputmode="numeric" maxlength="10" autocomplete="off" placeholder="10-digit mobile number" aria-describedby="mobile-help mobile-err" />
+                <p class="help" id="mobile-help">Filled into the Mobile Number field under "Ticket details will be sent to…". If empty, IRCTC keeps your registered number.</p>
+                <p class="err" id="mobile-err" role="alert"></p>
+              </div>
+              <div class="field">
+                <label for="coach">Preferred coach <span class="opt">optional</span></label>
+                <input id="coach" maxlength="4" autocomplete="off" placeholder="B2" aria-describedby="coach-err" />
+                <p class="err" id="coach-err" role="alert"></p>
+              </div>
+              <div class="field">
+                <label for="gst">GST number <span class="opt">optional</span></label>
+                <input id="gst" maxlength="15" autocomplete="off" placeholder="15-character GSTIN" aria-describedby="gst-err" />
+                <p class="err" id="gst-err" role="alert"></p>
+              </div>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <div class="bar">
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+        <div class="bar-actions">
+          <button id="discard" type="button" class="btn" hidden>Discard changes</button>
+          <button id="save" type="submit" class="btn primary">Save changes</button>
+        </div>
+      </div>
+    </form>
+
+    <div id="toasts" class="toasts" aria-live="polite"></div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
