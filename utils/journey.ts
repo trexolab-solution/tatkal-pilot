@@ -29,6 +29,18 @@ async function pickStation(fieldSelector: string, code: string) {
   await sleep(150);
 }
 
+const shown = (ariaLabel: string) => norm($(`[aria-label="${ariaLabel}"] .select-placeholder`)?.textContent);
+
+/** Select a dropdown value and confirm the page really shows it (the site can silently reset it). Retries a few times. */
+async function setDropdown(ariaLabel: string, text: string) {
+  for (let attempt = 0; attempt < 4; attempt++) {
+    await pickDropdown(ariaLabel, text);
+    await sleep(250);
+    if (shown(ariaLabel) === norm(text)) return;
+  }
+  throw new Error(`Could not set ${ariaLabel} to ${text}. Choose it on the page, then press Start again.`);
+}
+
 async function pickDropdown(ariaLabel: string, text: string) {
   const field = await waitFor(() => $(`[aria-label="${ariaLabel}"]`), `${ariaLabel} field`);
   if (norm(field.querySelector('.select-placeholder')?.textContent) === norm(text)) return;
@@ -80,7 +92,7 @@ export async function fillJourney(j: JourneyInput, opts: { searchAt?: number; ca
   await pickStation('#home-from-station', j.from);
   await pickStation('#home-to-station', j.to);
   await pickDate(j.date);
-  await pickDropdown('Quota', j.quota);
+  await setDropdown('Quota', j.quota);
 
   const btn = await waitFor(() => $<HTMLButtonElement>('button.search-btn'), 'Search Trains button');
   if (opts.searchAt && opts.searchAt > Date.now()) {
@@ -96,6 +108,7 @@ export async function fillJourney(j: JourneyInput, opts: { searchAt?: number; ca
     status(null);
     if (!reached) return false; // stopped while waiting
   }
+  await setDropdown('Quota', j.quota); // the site may have reset it while we waited
   click(btn);
   return true;
 }

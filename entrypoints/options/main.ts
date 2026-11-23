@@ -1128,6 +1128,10 @@ void getStore().then((s) => {
   if (location.hash === '#new') {
     history.replaceState(null, '', location.pathname);
     startNew();
+  } else if (location.hash.startsWith('#edit=') && store.bookings.some((b) => b.id === location.hash.slice(6))) {
+    const id = location.hash.slice(6);
+    history.replaceState(null, '', location.pathname);
+    openBooking(id);
   } else if (location.hash === '#settings') {
     history.replaceState(null, '', location.pathname);
     showView('settings');

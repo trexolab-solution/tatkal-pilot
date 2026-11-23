@@ -63,6 +63,11 @@ const PANEL_CSS = `
 .body { padding: 0 14px 14px; display: grid; gap: 12px; padding-top: 12px; }
 .panel.collapsed .body { display: none; }
 select { width: 100%; height: 34px; padding: 0 8px; border: 1px solid #cfd3d9; border-radius: 8px; background: #fff; color: #071541; font: inherit; font-weight: 600; }
+.sumrow { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-top: 10px; }
+.sumrow .sum { min-width: 0; padding-top: 4px; }
+.edit { flex: none; width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid #d5deef; border-radius: 8px; background: #fff; color: #0b71ba; cursor: pointer; }
+.edit:hover { background: #eef4fb; }
+.edit:focus-visible { outline: 2px solid #0d52c4; outline-offset: 2px; }
 .sum { font-weight: 600; color: #071541; }
 .sub { color: #4a5a7d; font-size: 12px; margin-top: 2px; }
 .sub .up { color: ${ORANGE}; font-weight: 600; }
@@ -102,6 +107,8 @@ const GEAR =
   '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6.2 4.5h7.3M6.2 8h7.3M6.2 11.5h7.3"/><path d="M2.6 4.5h.01M2.6 8h.01M2.6 11.5h.01" stroke-width="2.2"/></svg>';
 const GRIP =
   '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="currentColor"><circle cx="5.5" cy="3.5" r="1.25"/><circle cx="10.5" cy="3.5" r="1.25"/><circle cx="5.5" cy="8" r="1.25"/><circle cx="10.5" cy="8" r="1.25"/><circle cx="5.5" cy="12.5" r="1.25"/><circle cx="10.5" cy="12.5" r="1.25"/></svg>';
+const PENCIL =
+  '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.8 2.7l2.5 2.5-7.6 7.6-3.2.7.7-3.2z"/><path d="M9.4 4.1l2.5 2.5"/></svg>';
 const LOCK =
   '<svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.2" y="7" width="9.6" height="6.8" rx="1.6"/><path d="M5.4 7V5.2a2.6 2.6 0 0 1 5.2 0V7"/></svg>';
 const CHEVRON =
@@ -129,7 +136,7 @@ function mountPanel(ctx: ContentScriptContext) {
     <div class="body">
       <div class="has-bookings">
         <select id="pick" aria-label="Booking"></select>
-        <div class="sum" style="margin-top:10px"></div>
+        <div class="sumrow"><div class="sum"></div><button type="button" class="edit" title="Edit this booking" aria-label="Edit this booking">${PENCIL}</button></div>
         <div class="sub"></div>
       </div>
       <p class="empty" hidden>No booking saved yet.</p>
@@ -394,6 +401,7 @@ function mountPanel(ctx: ContentScriptContext) {
   q('.signin').addEventListener('click', () => {
     if (!openLogin()) toast('Use the Login button at the top of the IRCTC page.', 'info');
   });
+  q('.edit').addEventListener('click', () => void browser.runtime.sendMessage({ type: 'open-options', hash: `#edit=${store.activeId}` }));
   q('.manage').addEventListener('click', () => void browser.runtime.sendMessage({ type: 'open-options' }));
   fill.addEventListener('click', async () => {
     fill.disabled = true;
