@@ -2,7 +2,7 @@
  * All on-page UI (floating panel, toasts, status bar, passenger chooser) lives in one
  * shadow root, so the IRCTC site's CSS cannot restyle it and ours cannot leak into the site.
  */
-const HOST_ID = 'irctc-autofill-host';
+const HOST_ID = 'tatkal-pilot-host';
 
 export const ACCENT = '#0d52c4'; // IRCTC beta primary blue
 export const ACCENT_HOVER = '#0a42a0';

@@ -48,7 +48,7 @@ export function status(message: string | null, opts: StatusOptions = {}) {
     el.className = 'status';
     el.setAttribute('role', 'status');
     el.innerHTML =
-      '<div class="s-tag"><span class="s-dot"></span>IRCTC Autofill</div>' +
+      '<div class="s-tag"><span class="s-dot"></span>TatkalPilot</div>' +
       '<div class="s-line"><span class="s-msg"></span><b class="s-val"></b></div>' +
       '<div class="s-bar" hidden><i></i></div>';
     layer.appendChild(el);

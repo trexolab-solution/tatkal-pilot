@@ -114,13 +114,13 @@ function mountPanel(ctx: ContentScriptContext) {
 
   const panel = document.createElement('section');
   panel.className = 'panel';
-  panel.setAttribute('aria-label', 'IRCTC Autofill');
+  panel.setAttribute('aria-label', 'TatkalPilot');
   panel.innerHTML = `
     <div class="bar">
       <button type="button" class="grip" aria-label="Move panel" title="Drag to move (or use the arrow keys)">${GRIP}</button>
       <button type="button" class="head" aria-expanded="true">
         <span class="dot" aria-hidden="true"></span>
-        <span>IRCTC Autofill</span>
+        <span>TatkalPilot</span>
         <span class="login" hidden></span>
         ${CHEVRON}
       </button>

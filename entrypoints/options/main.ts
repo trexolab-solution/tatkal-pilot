@@ -473,7 +473,7 @@ function showView(v: 'list' | 'edit' | 'settings') {
   $('#settingsView').hidden = v !== 'settings';
   $('#tabBookings').setAttribute('aria-current', v === 'settings' ? 'false' : 'page');
   $('#tabSettings').setAttribute('aria-current', v === 'settings' ? 'page' : 'false');
-  document.title = v === 'list' ? 'IRCTC Autofill – Bookings' : v === 'settings' ? 'IRCTC Autofill – Settings' : 'IRCTC Autofill – Edit booking';
+  document.title = v === 'list' ? 'TatkalPilot – Bookings' : v === 'settings' ? 'TatkalPilot – Settings' : 'TatkalPilot – Edit booking';
   window.scrollTo(0, 0);
 }
 

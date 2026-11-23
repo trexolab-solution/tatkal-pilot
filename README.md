@@ -1,4 +1,4 @@
-# IRCTC Autofill
+# TatkalPilot
 
 A Chrome extension that speeds up **Tatkal** bookings on the new IRCTC site (`irctc.co.in/eticket`). You log in and press **BOOK** and **Pay**; the extension fills in the rest.
 
