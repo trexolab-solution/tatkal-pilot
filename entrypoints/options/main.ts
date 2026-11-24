@@ -40,6 +40,7 @@ import {
   type TrainHit,
 } from '@/utils/lookup';
 import { openingLabel, openingState, tatkalOpening } from '@/utils/tatkal';
+import { applyBadge, availableUpdate, currentVersion, ensureUpdateCheck, lastChecked } from '@/utils/update';
 import { ICONS } from '@/utils/ui';
 
 type Field = HTMLInputElement | HTMLSelectElement;
@@ -1017,6 +1018,31 @@ $('#timingReset').addEventListener('click', async () => {
   toast('Timing reset to defaults', 'info');
 });
 void getTiming().then(showTiming);
+
+/* ---------- updates (GitHub releases) ---------- */
+
+async function refreshUpdateUi(note = '') {
+  const u = await availableUpdate();
+  const link = $<HTMLAnchorElement>('#updateLink');
+  link.hidden = !u;
+  if (u) link.href = u.url;
+  $('#updateTitle').textContent = u ? `Update available: ${u.latest}` : `You have the latest version (v${currentVersion()})`;
+  const at = await lastChecked();
+  $('#updateStatus').textContent = note || (at ? `Last checked ${new Date(at).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}` : 'Not checked yet');
+}
+
+$('#updateCheck').addEventListener('click', async () => {
+  const btn = $<HTMLButtonElement>('#updateCheck');
+  btn.disabled = true;
+  btn.textContent = 'Checking…';
+  const r = await ensureUpdateCheck(true);
+  btn.disabled = false;
+  btn.textContent = 'Check now';
+  await applyBadge();
+  await refreshUpdateUi(r.status === 'failed' ? `Could not check: ${r.error}` : '');
+});
+void ensureUpdateCheck().then(() => Promise.all([refreshUpdateUi(), applyBadge()])).catch(() => undefined);
+void refreshUpdateUi();
 
 $('#saveKey').addEventListener('click', async () => {
   const v = input('railKey').value.trim();

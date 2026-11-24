@@ -404,4 +404,7 @@ label.set-row { cursor: pointer; }
 #settingsView .panel .set-row { padding: 2px 0 0; border-top: 0; }
 #settingsView .panel > h3 { margin-bottom: 12px; }
 #settingsView .more { margin-top: 16px; }
+#settingsView .set-row + .help { margin: 14px 0 0; }
+a.btn { text-decoration: none; }
+.btn[hidden] { display: none; }
 .fine-print { margin: 20px 4px 0; color: var(--muted); font-size: 12px; }
