@@ -1,3 +1,4 @@
+import { clockInfo, formatOffset, now } from './clock';
 import { $, $$, click, norm, setInputValue, sleep, waitFor, waitUntil } from './dom';
 import { status } from './toast';
 
@@ -95,8 +96,8 @@ export async function fillJourney(j: JourneyInput, opts: { searchAt?: number; ca
   await setDropdown('Quota', j.quota);
 
   const btn = await waitFor(() => $<HTMLButtonElement>('button.search-btn'), 'Search Trains button');
-  if (opts.searchAt && opts.searchAt > Date.now()) {
-    const begin = Date.now();
+  if (opts.searchAt && opts.searchAt > now()) {
+    const begin = now();
     const at = new Date(opts.searchAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false });
     const left = (s: number) => {
       const h = Math.floor(s / 3600);
@@ -104,7 +105,9 @@ export async function fillJourney(j: JourneyInput, opts: { searchAt?: number; ca
       return h > 0 ? `${h}h ${String(m).padStart(2, '0')}m` : `${String(m).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
     };
     const span = Math.max(1, opts.searchAt - begin);
-    const reached = await waitUntil(opts.searchAt, (s) => status(`Search at ${at}`, { value: left(s), progress: (Date.now() - begin) / span }), opts.cancelled);
+    const { synced, offset } = clockInfo();
+    const label = synced ? `Search at ${at} · clock ${formatOffset(offset)}` : `Search at ${at}`;
+    const reached = await waitUntil(opts.searchAt, (s) => status(label, { value: left(s), progress: (now() - begin) / span }), opts.cancelled);
     status(null);
     if (!reached) return false; // stopped while waiting
   }

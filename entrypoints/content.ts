@@ -1,3 +1,4 @@
+import { now } from '@/utils/clock';
 import { timerChip } from '@/utils/timer';
 import { fillPassengersPage, routeStage, startRun, stop, watchRoutes } from '@/utils/run';
 import { startHarvest } from '@/utils/harvest';
@@ -122,7 +123,7 @@ function mountPanel(ctx: ContentScriptContext) {
   const panel = document.createElement('section');
   panel.className = 'panel';
   panel.setAttribute('aria-label', 'TatkalPilot');
-  panel.innerHTML = `
+  panel.innerHTML = /* security-ok: static template, only constant SVG strings are interpolated */ `
     <div class="bar">
       <button type="button" class="grip" aria-label="Move panel" title="Drag to move (or use the arrow keys)">${GRIP}</button>
       <button type="button" class="head" aria-expanded="true">
@@ -344,7 +345,7 @@ function mountPanel(ctx: ContentScriptContext) {
           if (!m) return 0;
           const d = new Date();
           d.setHours(Number(m[1]), Number(m[2]), Number(m[3] ?? 0), 0);
-          return d.getTime() - Date.now();
+          return d.getTime() - now();
         })()
       : 0;
     state.textContent = run.active
