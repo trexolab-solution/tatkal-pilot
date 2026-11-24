@@ -76,6 +76,64 @@ export const defaultProfile: Profile = {
   },
 };
 
+/* ---------- retry & timing (global, not per booking) ---------- */
+
+/** All values in seconds. Defaults are the tested behaviour; the options page clamps to TIMING_LIMITS. */
+export interface Timing {
+  availWindow: number; // Check Availability: keep retrying for this long
+  attemptWait: number; // one press gets this long to show the result before pressing again
+  gapMin: number; // pause between retries, lower bound
+  gapMax: number; // pause between retries, upper bound
+  searchWindow: number; // Search Trains: keep retrying for this long
+  searchWait: number; // after pressing Search, wait this long for the train list
+  pageWait: number; // train list / passenger page load
+  paymentWait: number; // "Continue To Payment" button
+  reopenLimit: number; // times availability is reopened after the site resets the list
+}
+
+export const defaultTiming: Timing = {
+  availWindow: 60,
+  attemptWait: 5,
+  gapMin: 1.5,
+  gapMax: 2,
+  searchWindow: 60,
+  searchWait: 12,
+  pageWait: 60,
+  paymentWait: 15,
+  reopenLimit: 8,
+};
+
+/** For a busy day: same pace, longer patience. */
+export const heavyTiming: Timing = { ...defaultTiming, availWindow: 90, searchWindow: 90, pageWait: 90 };
+
+/** [min, max] per field. Too-fast retries get an account throttled, so the gap has a hard floor. */
+export const TIMING_LIMITS: Record<keyof Timing, [number, number]> = {
+  availWindow: [10, 180],
+  attemptWait: [2, 30],
+  gapMin: [1, 10],
+  gapMax: [1, 15],
+  searchWindow: [10, 180],
+  searchWait: [3, 60],
+  pageWait: [10, 180],
+  paymentWait: [5, 60],
+  reopenLimit: [1, 20],
+};
+
+export function clampTiming(t: Partial<Timing>): Timing {
+  const out = { ...defaultTiming };
+  for (const k of Object.keys(defaultTiming) as (keyof Timing)[]) {
+    const v = Number(t[k]);
+    const [lo, hi] = TIMING_LIMITS[k];
+    if (Number.isFinite(v)) out[k] = Math.min(hi, Math.max(lo, v));
+  }
+  if (out.gapMax < out.gapMin) out.gapMax = out.gapMin;
+  return out;
+}
+
+const timingItem = storage.defineItem<Partial<Timing>>('local:timing', { fallback: {} });
+export const getTiming = async () => clampTiming(await timingItem.getValue());
+export const saveTiming = (t: Partial<Timing>) => timingItem.setValue(clampTiming(t));
+
 /* ---------- bookings store ---------- */
 
 const storeItem = storage.defineItem<Store>('local:store', { fallback: { bookings: [], activeId: '' } });
