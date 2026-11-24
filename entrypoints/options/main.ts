@@ -3,18 +3,24 @@ import {
   autoName,
   BERTHS,
   CLASSES,
+  defaultTiming,
   displayName,
   emptyBooking,
   getStore,
+  getTiming,
+  heavyTiming,
   MAX_PASSENGERS,
   newId,
   problemsFor,
   saveStore,
+  saveTiming,
+  TIMING_LIMITS,
   watchStore,
   type Gender,
   type PassengerEntry,
   type SavedBooking,
   type Store,
+  type Timing,
   type Tri,
 } from '@/utils/storage';
 import { attachCombobox } from '@/utils/combobox';
@@ -56,7 +62,7 @@ function toast(message: string, kind: Kind = 'success', opts: { ms?: number; act
   const el = document.createElement('div');
   el.className = `toast ${kind}`;
   el.setAttribute('role', kind === 'error' ? 'alert' : 'status');
-  el.innerHTML = `${ICONS[kind]}<span class="msg"></span>`;
+  el.innerHTML = `${ICONS[kind]}<span class="msg"></span>`; // security-ok: ICONS is a constant map, the message goes in via textContent
   el.querySelector('.msg')!.textContent = message;
   if (opts.action) {
     const a = document.createElement('button');
@@ -197,7 +203,7 @@ function passengerRow(p: PassengerEntry): HTMLElement {
   const isNewPax = p.kind === 'new';
   const li = document.createElement('li');
   li.className = 'pax';
-  li.innerHTML = `
+  li.innerHTML = /* security-ok: only counters and fixed option lists are interpolated; stored values are set via .value */ `
     <div class="pax-bar">
       <span class="pax-num"><span class="sr-only">Passenger </span><span class="pax-n"></span></span>
       <div class="seg" role="radiogroup" aria-label="Passenger source">
@@ -404,7 +410,7 @@ function renderForm(sb: SavedBooking) {
   input('autoCalc').checked = o.autoCalc;
   $<HTMLDetailsElement>('#moreOpts').open = !!(o.mobile || o.coach || o.gst);
   const list = $('#passengers');
-  list.innerHTML = '';
+  list.innerHTML = ''; // security-ok: clears the list, no content is inserted
   sb.passengers.forEach((x) => list.appendChild(passengerRow(x)));
   refreshPassengers();
   updateOpeningHint();
@@ -505,7 +511,7 @@ function iconButton(kind: 'edit' | 'copy' | 'trash', label: string, onClick: () 
   b.className = 'icon-btn';
   b.title = label;
   b.setAttribute('aria-label', label);
-  b.innerHTML = `<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${ICON_PATHS[kind]}</svg>`;
+  b.innerHTML = `<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${ICON_PATHS[kind]}</svg>`; // security-ok: ICON_PATHS is a constant map
   b.addEventListener('click', onClick);
   return b;
 }
@@ -939,6 +945,78 @@ $('#syncStations').addEventListener('click', async () => {
   await refreshStationUi();
   await refreshKeyUi();
 });
+
+/* ---------- retry & timing (global) ---------- */
+
+const TIMING_KEYS = Object.keys(defaultTiming) as (keyof Timing)[];
+const tField = (k: keyof Timing) => input(`t-${k}`);
+const sameTiming = (a: Timing, b: Timing) => TIMING_KEYS.every((k) => a[k] === b[k]);
+
+function readTiming(): Partial<Timing> {
+  const out: Partial<Timing> = {};
+  for (const k of TIMING_KEYS) out[k] = tField(k).value.trim() === '' ? NaN : Number(tField(k).value);
+  return out;
+}
+
+function showTiming(t: Timing) {
+  for (const k of TIMING_KEYS) tField(k).value = String(t[k]);
+  syncPreset();
+}
+
+/** Highlight the preset the fields currently match, or Custom. */
+function syncPreset() {
+  const cur = readTiming() as Timing;
+  const name = sameTiming(cur, defaultTiming) ? 'normal' : sameTiming(cur, heavyTiming) ? 'heavy' : 'custom';
+  radio('tpreset', name);
+  $('#presetHelp').textContent =
+    name === 'normal' ? 'The tested defaults.' : name === 'heavy' ? 'Same pace as Normal, but keeps trying for 90 seconds.' : 'Your own values.';
+}
+
+/** Returns the valid values, or null after marking each bad field. */
+function validateTiming(): Timing | null {
+  const raw = readTiming();
+  let ok = true;
+  for (const k of TIMING_KEYS) {
+    const el = tField(k);
+    const [lo, hi] = TIMING_LIMITS[k];
+    const v = raw[k] as number;
+    const err = !Number.isFinite(v) ? 'Enter a number.' : v < lo || v > hi ? `Use ${lo} to ${hi}.` : k === 'reopenLimit' && !Number.isInteger(v) ? 'Use a whole number.' : '';
+    el.setAttribute('aria-invalid', err ? 'true' : 'false');
+    el.closest('.field')!.querySelector('.err')!.textContent = err;
+    if (err) ok = false;
+  }
+  if (ok && (raw.gapMax as number) < (raw.gapMin as number)) {
+    ok = false;
+    const e = tField('gapMax');
+    e.setAttribute('aria-invalid', 'true');
+    e.closest('.field')!.querySelector('.err')!.textContent = 'Must be at least the minimum pause.';
+  }
+  return ok ? (raw as Timing) : null;
+}
+
+$$<HTMLInputElement>('input[name="tpreset"]').forEach((r) =>
+  r.addEventListener('change', () => {
+    if (r.value === 'normal') showTiming(defaultTiming);
+    else if (r.value === 'heavy') showTiming(heavyTiming);
+    $('#timingStatus').textContent = '';
+  }),
+);
+$$('#timingGrid input').forEach((el) => el.addEventListener('input', () => { syncPreset(); $('#timingStatus').textContent = ''; }));
+$('#timingSave').addEventListener('click', async () => {
+  const t = validateTiming();
+  if (!t) return toast('Fix the highlighted timing values', 'error');
+  await saveTiming(t);
+  $('#timingStatus').textContent = 'Saved. Applies from the next step of a run.';
+  toast('Timing saved');
+});
+$('#timingReset').addEventListener('click', async () => {
+  showTiming(defaultTiming);
+  validateTiming();
+  await saveTiming(defaultTiming);
+  $('#timingStatus').textContent = 'Back to the defaults.';
+  toast('Timing reset to defaults', 'info');
+});
+void getTiming().then(showTiming);
 
 $('#saveKey').addEventListener('click', async () => {
   const v = input('railKey').value.trim();

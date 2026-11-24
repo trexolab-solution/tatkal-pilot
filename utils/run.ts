@@ -1,8 +1,23 @@
+import { now, syncClock } from './clock';
 import { $, $$, click, isVisible, sleep, waitFor } from './dom';
 import { fillJourney } from './journey';
 import { addMasterPassengers, addNewPassenger } from './passengers';
 import { applyOptions } from './prefs';
-import { getProfile, getRun, getStore, problemsFor, QUOTA, setRun, stopRun, watchRun, type Profile, type Stage } from './storage';
+import {
+  defaultTiming,
+  getProfile,
+  getRun,
+  getStore,
+  getTiming,
+  problemsFor,
+  QUOTA,
+  setRun,
+  stopRun,
+  watchRun,
+  type Profile,
+  type Stage,
+  type Timing,
+} from './storage';
 import { status, toast } from './toast';
 
 const HOME_URL = 'https://www.irctc.co.in/eticket/train-search';
@@ -21,7 +36,7 @@ function parseStart(t: string): number | undefined {
   if (!m) return undefined;
   const d = new Date();
   d.setHours(Number(m[1]), Number(m[2]), Number(m[3] ?? 0), 0);
-  return d.getTime() > Date.now() ? d.getTime() : undefined;
+  return d.getTime() > now() ? d.getTime() : undefined;
 }
 
 const isLoginButton = (e: Element) => /^login$/i.test(e.textContent?.trim() ?? '');
@@ -44,11 +59,12 @@ function fail(e: unknown) {
 }
 
 /* ---- Retry policy for a slow / failing site (Tatkal traffic) ----
- * Retries are bounded and only happen after a step actually failed. Never an endless loop. */
-const MAX_ATTEMPTS = 8; // Check Availability
-const MAX_SEARCH_ATTEMPTS = 5; // Search Trains
-const SLOW_WAIT = 60_000; // how long we patiently wait for a page / list to show up
-const retryGap = () => 1500 + Math.random() * 500;
+ * Like a person pressing the button again on "High Load": keep retrying until it works, but give up
+ * after RETRY_WINDOW. Retries only happen after a step actually failed. */
+/** User-adjustable (Settings page); reloaded at the start of every step so a change applies at once. */
+let T: Timing = defaultTiming;
+const ms = (s: number) => s * 1000;
+const retryGap = () => ms(T.gapMin + Math.random() * (T.gapMax - T.gapMin));
 
 /** Text of any visible site toast, to include in failure messages. */
 function siteToast(): string {
@@ -67,22 +83,27 @@ async function stageHome(p: Profile) {
   await ensureLoggedIn();
   await setRun({ stage: 'list' }); // set before the search click navigates away
   runStopped = false;
+  if (b.startAt.trim()) await syncClock(); // measure IRCTC's clock so the timed search fires on its second
   const searched = await fillJourney({ from: b.from, to: b.to, date: b.date, quota: QUOTA }, { searchAt: parseStart(b.startAt), cancelled: () => runStopped });
   if (!searched) return;
 
-  // The site can stay on the home page when it is overloaded: press Search again (bounded).
-  for (let attempt = 2; attempt <= MAX_SEARCH_ATTEMPTS + 1; attempt++) {
+  // The site can stay on the home page when it is overloaded: press Search again until it moves (bounded by time).
+  const deadline = Date.now() + ms(T.searchWindow);
+  let searches = 1;
+  for (;;) {
     status('Waiting for search results…');
-    const moved = await waitFor(() => routeStage() !== 'home', 'search result', 12000).then(() => true, () => false);
+    const moved = await waitFor(() => routeStage() !== 'home', 'search result', ms(T.searchWait)).then(() => true, () => false);
     if (moved) return void status(null);
+    if (runStopped) return void status(null);
     const btn = $<HTMLButtonElement>('button.search-btn');
-    if (!btn || attempt > MAX_SEARCH_ATTEMPTS) break;
-    status(`Searching again (${attempt}/${MAX_SEARCH_ATTEMPTS})…`);
+    if (!btn || Date.now() >= deadline) break;
+    searches++;
+    status(`Searching again (#${searches}, up to ${Math.max(0, Math.ceil((deadline - Date.now()) / 1000))}s left)…`);
     await sleep(retryGap());
     click(btn);
   }
   status(null);
-  throw new Error(`The train list did not load after ${MAX_SEARCH_ATTEMPTS} searches. ${siteToast()} Press Start to try again.`.trim());
+  throw new Error(`The train list did not load after ${searches} searches in ${T.searchWindow}s. ${siteToast()} Press Start to try again.`.trim());
 }
 
 const findCard = (no: string) =>
@@ -92,16 +113,18 @@ const findTarget = (card: HTMLElement, cls: string) =>
 
 /** Press Check Availability until the class cards show up (bounded retries). */
 async function openAvailability(card: HTMLElement): Promise<HTMLElement[]> {
-  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-    if (card.querySelector('.class-card')) break;
-    status(`Check Availability: attempt ${attempt}/${MAX_ATTEMPTS}…`);
+  const deadline = Date.now() + ms(T.availWindow);
+  for (let attempt = 1; !card.querySelector('.class-card'); attempt++) {
+    if (runStopped) break;
+    const left = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+    status(`Check Availability: attempt ${attempt} (retrying up to ${left}s)…`);
     const btn = card.querySelector<HTMLElement>('button.btn-availability');
     if (btn) click(btn);
-    const ok = await waitFor(() => card.querySelector('.class-card'), 'class availability', 8000).then(() => true, () => false);
+    const ok = await waitFor(() => card.querySelector('.class-card'), 'class availability', ms(T.attemptWait)).then(() => true, () => false);
     if (ok) break;
-    if (attempt === MAX_ATTEMPTS) {
+    if (Date.now() >= deadline) {
       status(null);
-      throw new Error(`Availability did not load after ${MAX_ATTEMPTS} attempts. ${siteToast()} Press Start to try again.`.trim());
+      throw new Error(`Availability did not load after ${attempt} attempts in ${T.availWindow}s. ${siteToast()} Press Start to try again.`.trim());
     }
     await sleep(retryGap());
   }
@@ -130,7 +153,7 @@ async function keepHighlighted(no: string, cls: string) {
       continue;
     }
     if (!card) continue; // list is re-rendering
-    if (reopens >= MAX_ATTEMPTS) {
+    if (reopens >= T.reopenLimit) {
       toast('Availability keeps resetting. Please check it manually.', 'error');
       return;
     }
@@ -155,7 +178,7 @@ async function stageList(p: Profile) {
   const card = await waitFor(
     () => findCard(no),
     `train ${no} in the list (does it run on this date and route?)`,
-    SLOW_WAIT,
+    ms(T.pageWait),
   ).finally(() => status(null));
   card.scrollIntoView({ block: 'center' });
 
@@ -176,8 +199,9 @@ async function stageList(p: Profile) {
 }
 
 export async function fillPassengersPage(p: Profile): Promise<void> {
+  T = await getTiming();
   status('Loading the passenger page…');
-  await waitFor(() => isVisible($('button.btn-existing')), 'the passenger page', SLOW_WAIT).finally(() => status(null));
+  await waitFor(() => isVisible($('button.btn-existing')), 'the passenger page', ms(T.pageWait)).finally(() => status(null));
   const problems: string[] = [];
   const masters = p.passengers.flatMap((x) => (x.kind === 'master' ? [x.query] : []));
   problems.push(...(await addMasterPassengers(masters)));
@@ -203,7 +227,7 @@ async function stagePassengers(p: Profile) {
 async function stageReview(p: Profile) {
   if (!p.options.autoCalc) return;
   await sleep(600);
-  const btn = await waitFor(() => $<HTMLButtonElement>('button.btn-payment:not([disabled])'), 'the Continue To Payment button', 15000);
+  const btn = await waitFor(() => $<HTMLButtonElement>('button.btn-payment:not([disabled])'), 'the Continue To Payment button', ms(T.paymentWait));
   await setRun({ stage: 'done' });
   click(btn); // stops on the Payment page; Pay & Book stays manual
 }
@@ -230,6 +254,7 @@ export async function advance(): Promise<void> {
   busy = true;
   try {
     const profile = await getProfile(run.bookingId);
+    T = await getTiming();
     validate(profile);
     await handlers[here](profile);
   } catch (e) {
