@@ -2,6 +2,7 @@ import { timerChip } from '@/utils/timer';
 import { getProfile, getStore, problemsFor, shortDate, type SavedBooking, type Store } from '@/utils/storage';
 import type { SiteStatus } from '@/utils/site';
 import { ensureDailySync } from '@/utils/catalog';
+import { applyBadge, availableUpdate, ensureUpdateCheck } from '@/utils/update';
 import { openingState } from '@/utils/tatkal';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -196,6 +197,18 @@ $('createFirst').addEventListener('click', () => openOptions('#new'));
 
 document.getElementById('version')!.textContent = browser.runtime.getManifest().version;
 void ensureDailySync().catch(() => undefined); // first open of the day refreshes the station list
+
+// Not on the Web Store: tell the user when a newer GitHub release exists (link only, nothing is installed).
+async function showUpdate() {
+  const u = await availableUpdate();
+  const a = $<HTMLAnchorElement>('update');
+  a.hidden = !u;
+  if (!u) return;
+  a.href = u.url;
+  a.textContent = `Update available: ${u.latest} · Download`;
+}
+void showUpdate();
+void ensureUpdateCheck().then(() => Promise.all([showUpdate(), applyBadge()])).catch(() => undefined);
 void getStore().then((s) => {
   store = s;
   void render();
