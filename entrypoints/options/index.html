@@ -90,6 +90,85 @@
         </details>
       </section>
 
+      <section class="panel" aria-labelledby="h-timing">
+        <h3 id="h-timing">Retry &amp; timing</h3>
+        <p class="help">When IRCTC shows "High Load", TatkalPilot presses the button again like you would. These apply to every booking. Retrying faster than 1 second apart can get your account throttled, so values are limited.</p>
+
+        <div class="set-row" role="group" aria-labelledby="presetLabel">
+          <div class="set-text">
+            <strong id="presetLabel">Preset</strong>
+            <span class="help" id="presetHelp"></span>
+          </div>
+          <div class="seg">
+            <label><input type="radio" name="tpreset" value="normal" /><span>Normal</span></label>
+            <label><input type="radio" name="tpreset" value="heavy" /><span>Heavy load</span></label>
+            <label><input type="radio" name="tpreset" value="custom" /><span>Custom</span></label>
+          </div>
+        </div>
+
+        <div class="grid" id="timingGrid">
+          <div class="field">
+            <label for="t-availWindow">Check Availability: retry for (s)</label>
+            <input id="t-availWindow" data-t="availWindow" type="number" inputmode="decimal" step="any" />
+            <p class="help">Keeps pressing until the classes show up, up to this long.</p>
+            <p class="err" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="t-attemptWait">Wait after each press (s)</label>
+            <input id="t-attemptWait" data-t="attemptWait" type="number" inputmode="decimal" step="any" />
+            <p class="help">How long one press gets before pressing again.</p>
+            <p class="err" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="t-gapMin">Pause between retries, min (s)</label>
+            <input id="t-gapMin" data-t="gapMin" type="number" inputmode="decimal" step="any" />
+            <p class="err" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="t-gapMax">Pause between retries, max (s)</label>
+            <input id="t-gapMax" data-t="gapMax" type="number" inputmode="decimal" step="any" />
+            <p class="help">A random pause in this range, so presses are not robotic.</p>
+            <p class="err" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="t-searchWindow">Search Trains: retry for (s)</label>
+            <input id="t-searchWindow" data-t="searchWindow" type="number" inputmode="decimal" step="any" />
+            <p class="err" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="t-searchWait">Wait for the train list (s)</label>
+            <input id="t-searchWait" data-t="searchWait" type="number" inputmode="decimal" step="any" />
+            <p class="help">After pressing Search, before pressing it again.</p>
+            <p class="err" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="t-pageWait">Page load wait (s)</label>
+            <input id="t-pageWait" data-t="pageWait" type="number" inputmode="decimal" step="any" />
+            <p class="help">Train list and passenger page.</p>
+            <p class="err" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="t-paymentWait">Continue To Payment wait (s)</label>
+            <input id="t-paymentWait" data-t="paymentWait" type="number" inputmode="decimal" step="any" />
+            <p class="err" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="t-reopenLimit">Reopen availability up to (times)</label>
+            <input id="t-reopenLimit" data-t="reopenLimit" type="number" inputmode="numeric" step="1" />
+            <p class="help">When IRCTC resets the list after the class is highlighted.</p>
+            <p class="err" role="alert"></p>
+          </div>
+        </div>
+
+        <div class="set-row">
+          <p class="help" id="timingStatus" aria-live="polite"></p>
+          <span class="bar-actions">
+            <button id="timingReset" type="button" class="btn">Reset to defaults</button>
+            <button id="timingSave" type="button" class="btn primary">Save timing</button>
+          </span>
+        </div>
+      </section>
+
       <p class="fine-print">TatkalPilot <span id="version"></span> · Built by Pintu Prajapati · Data: Datameet (CC0) and India API (CC BY-SA 4.0).</p>
     </main>
 

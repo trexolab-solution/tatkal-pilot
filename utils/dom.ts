@@ -1,3 +1,5 @@
+import { now } from './clock';
+
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /** Poll until `fn` returns a truthy value, or throw after `timeout` ms. */
@@ -20,7 +22,7 @@ export async function waitUntil(target: number, onTick?: (secondsLeft: number) =
   let lastShown = -1;
   for (;;) {
     if (cancelled?.()) return false;
-    const left = target - Date.now();
+    const left = target - now(); // server-synced clock, see clock.ts
     if (left <= 0) return true;
     const secs = Math.ceil(left / 1000);
     if (secs !== lastShown) {
