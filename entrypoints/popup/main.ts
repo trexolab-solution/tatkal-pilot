@@ -42,7 +42,7 @@ async function getCtx(): Promise<Ctx> {
 function showSite(tone: Tone, text: string, linkLabel?: string, onLink?: () => void) {
   const el = $('site');
   el.className = `site ${tone}`;
-  el.innerHTML = ICON[tone];
+  el.innerHTML = ICON[tone]; // security-ok: ICON is a constant map of static SVG, the text goes in via textContent
   const span = document.createElement('span');
   span.textContent = text;
   el.appendChild(span);
@@ -112,7 +112,7 @@ function bookingItem(b: SavedBooking): HTMLLIElement {
   edit.className = 'b-edit';
   edit.title = `Edit "${title}"`;
   edit.setAttribute('aria-label', `Edit "${title}"`);
-  edit.innerHTML =
+  edit.innerHTML = /* security-ok: a literal SVG string, no variables */
     '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.8 2.7l2.5 2.5-7.6 7.6-3.2.7.7-3.2z"/><path d="M9.4 4.1l2.5 2.5"/></svg>';
   edit.addEventListener('click', () => openOptions(`#edit=${b.id}`));
 
