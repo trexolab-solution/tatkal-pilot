@@ -1,5 +1,5 @@
 import { now, syncClock } from './clock';
-import { $, $$, click, isVisible, sleep, waitFor } from './dom';
+import { $, $$, Cancelled, click, isVisible, sleep, waitFor } from './dom';
 import { fillJourney } from './journey';
 import { addMasterPassengers, addNewPassenger } from './passengers';
 import { applyOptions } from './prefs';
@@ -12,6 +12,7 @@ import {
   problemsFor,
   QUOTA,
   setRun,
+  shortDate,
   stopRun,
   watchRun,
   type Profile,
@@ -78,13 +79,22 @@ watchRun((r) => {
   if (!r.active) runStopped = true;
 });
 
+/**
+ * Restart bumps `gen`, so a step stuck in a long wait notices it was replaced and lets go at once;
+ * the new run then takes over. Stop does the same through `runStopped`.
+ */
+let gen = 0;
+let handlerGen = 0;
+const aborted = () => runStopped || handlerGen !== gen;
+const LIST_SETTLE = 3000; // train list shown but our train missing for this long: it is not in the list
+
 async function stageHome(p: Profile) {
   const b = p.booking;
   await ensureLoggedIn();
   await setRun({ stage: 'list' }); // set before the search click navigates away
   runStopped = false;
   if (b.startAt.trim()) await syncClock(); // measure IRCTC's clock so the timed search fires on its second
-  const searched = await fillJourney({ from: b.from, to: b.to, date: b.date, quota: QUOTA }, { searchAt: parseStart(b.startAt), cancelled: () => runStopped });
+  const searched = await fillJourney({ from: b.from, to: b.to, date: b.date, quota: QUOTA }, { searchAt: parseStart(b.startAt), cancelled: aborted });
   if (!searched) return;
 
   // The site can stay on the home page when it is overloaded: press Search again until it moves (bounded by time).
@@ -92,9 +102,9 @@ async function stageHome(p: Profile) {
   let searches = 1;
   for (;;) {
     status('Waiting for search results…');
-    const moved = await waitFor(() => routeStage() !== 'home', 'search result', ms(T.searchWait)).then(() => true, () => false);
+    const moved = await waitFor(() => routeStage() !== 'home', 'search result', ms(T.searchWait), aborted).then(() => true, () => false);
     if (moved) return void status(null);
-    if (runStopped) return void status(null);
+    if (aborted()) return void status(null);
     const btn = $<HTMLButtonElement>('button.search-btn');
     if (!btn || Date.now() >= deadline) break;
     searches++;
@@ -115,13 +125,14 @@ const findTarget = (card: HTMLElement, cls: string) =>
 async function openAvailability(card: HTMLElement): Promise<HTMLElement[]> {
   const deadline = Date.now() + ms(T.availWindow);
   for (let attempt = 1; !card.querySelector('.class-card'); attempt++) {
-    if (runStopped) break;
+    if (aborted()) throw new Cancelled();
     const left = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
     status(`Check Availability: attempt ${attempt} (retrying up to ${left}s)…`);
     const btn = card.querySelector<HTMLElement>('button.btn-availability');
     if (btn) click(btn);
-    const ok = await waitFor(() => card.querySelector('.class-card'), 'class availability', ms(T.attemptWait)).then(() => true, () => false);
+    const ok = await waitFor(() => card.querySelector('.class-card'), 'class availability', ms(T.attemptWait), aborted).then(() => true, () => false);
     if (ok) break;
+    if (aborted()) throw new Cancelled();
     if (Date.now() >= deadline) {
       status(null);
       throw new Error(`Availability did not load after ${attempt} attempts in ${T.availWindow}s. ${siteToast()} Press Start to try again.`.trim());
@@ -163,10 +174,11 @@ function autoBooker(enabled: boolean) {
  * site resets the list on an error (cards vanish), open availability again and re-highlight.
  */
 async function keepHighlighted(no: string, cls: string, book: (target: HTMLElement) => boolean) {
+  const myGen = gen; // a Restart starts its own loop, so this one must end
   let reopens = 0;
   while (routeStage() === 'list') {
     await sleep(1500);
-    if (routeStage() !== 'list' || !(await getRun()).active) return;
+    if (gen !== myGen || routeStage() !== 'list' || !(await getRun()).active) return;
     const card = findCard(no);
     const target = card && findTarget(card, cls);
     if (target) {
@@ -188,7 +200,7 @@ async function keepHighlighted(no: string, cls: string, book: (target: HTMLEleme
         if (!book(again)) toast('Availability reopened. Press BOOK.', 'info');
       }
     } catch (e) {
-      toast(e instanceof Error ? e.message : String(e), 'error');
+      if (!(e instanceof Cancelled)) toast(e instanceof Error ? e.message : String(e), 'error');
       return;
     }
   }
@@ -197,10 +209,29 @@ async function keepHighlighted(no: string, cls: string, book: (target: HTMLEleme
 async function stageList(p: Profile) {
   const no = p.booking.trainNo.trim().padStart(5, '0');
   status('Loading the train list…');
+  let listSince = 0; // when train cards first showed up
   const card = await waitFor(
-    () => findCard(no),
-    `train ${no} in the list (does it run on this date and route?)`,
+    () => {
+      const c = findCard(no);
+      if (c) return c;
+      const cards = $$('app-train-avl-enq');
+      if (!cards.length) {
+        listSince = 0; // still loading, or the list is being redrawn
+      } else if (!listSince) {
+        listSince = Date.now();
+        status(`Looking for train ${no}…`);
+      } else if (Date.now() - listSince > LIST_SETTLE) {
+        // The list is on screen and our train is not in it: waiting longer will not help.
+        const nums = cards.map((x) => x.querySelector('.train-number')?.textContent?.trim()).filter(Boolean);
+        const shown = nums.length > 8 ? `${nums.slice(0, 8).join(', ')} and more` : nums.join(', ');
+        const day = shortDate(p.booking.date);
+        throw new Error(`Train ${no} is not in this list (${cards.length} shown: ${shown}). It may not run${day ? ` on ${day}` : ' on this date'} or on this route. Check the booking, then press Start.`);
+      }
+      return null;
+    },
+    `train ${no} in the list`,
     ms(T.pageWait),
+    aborted,
   ).finally(() => status(null));
   card.scrollIntoView({ block: 'center' });
 
@@ -276,13 +307,15 @@ export async function advance(): Promise<void> {
   const here = routeStage();
   if (!run.active || run.stage === 'done' || !here || here !== run.stage) return;
   busy = true;
+  handlerGen = gen;
+  runStopped = false; // the run is active, so any earlier Stop no longer applies
   try {
     const profile = await getProfile(run.bookingId);
     T = await getTiming();
     validate(profile);
     await handlers[here](profile);
   } catch (e) {
-    fail(e);
+    if (!(e instanceof Cancelled)) fail(e); // stopped or restarted while waiting: nothing to report
   } finally {
     busy = false;
     if (pending) {
@@ -306,6 +339,8 @@ export async function startRun(): Promise<void> {
     return fail(e);
   }
   const here = routeStage();
+  gen++; // lets a step that is still waiting from the previous run step aside
+  runStopped = false;
   await setRun({ active: true, stage: here ?? 'home', bookingId: store.activeId });
   if (!here) {
     location.href = HOME_URL; // page reloads; the new page continues the run
