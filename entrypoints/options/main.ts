@@ -41,6 +41,7 @@ import {
 } from '@/utils/lookup';
 import { openingLabel, openingState, tatkalOpening } from '@/utils/tatkal';
 import { applyBadge, availableUpdate, currentVersion, ensureUpdateCheck, lastChecked } from '@/utils/update';
+import { initHelp, type HelpKey } from '@/utils/help';
 import { ICONS } from '@/utils/ui';
 
 type Field = HTMLInputElement | HTMLSelectElement;
@@ -192,9 +193,13 @@ let uid = 0;
 const options = (values: string[], selected: string) =>
   values.map((v) => `<option${v === selected ? ' selected' : ''}>${v}</option>`).join('');
 
-function fieldHtml(id: string, label: string, control: string, extra = '', cls = '') {
+/** Static "(?)" button markup. Only fixed keys and labels go in, never user data. */
+const helpBtn = (key: HelpKey, name: string) =>
+  `<button type="button" class="help-btn" data-help="${key}" aria-label="Help: ${name}" aria-expanded="false">?</button>`;
+
+function fieldHtml(id: string, label: string, control: string, extra = '', cls = '', help = '', trail = '') {
   return `<div class="field ${cls}">
-    <label for="${id}">${label}</label>${control}
+    <div class="lbl"><label for="${id}">${label}</label>${help}${trail}</div>${control}
     <p class="err" id="${id}-err" role="alert"></p>${extra}
   </div>`;
 }
@@ -207,13 +212,19 @@ function passengerRow(p: PassengerEntry): HTMLElement {
   li.innerHTML = /* security-ok: only counters and fixed option lists are interpolated; stored values are set via .value */ `
     <div class="pax-bar">
       <span class="pax-num"><span class="sr-only">Passenger </span><span class="pax-n"></span></span>
-      <div class="seg" role="radiogroup" aria-label="Passenger source">
-        <label><input type="radio" name="kind-${n}" value="master"${isNewPax ? '' : ' checked'} /><span>Master list</span></label>
-        <label><input type="radio" name="kind-${n}" value="new"${isNewPax ? ' checked' : ''} /><span>New passenger</span></label>
+      <div class="pax-src">
+        <div class="seg" role="radiogroup" aria-label="Passenger source">
+          <label><input type="radio" name="kind-${n}" value="master"${isNewPax ? '' : ' checked'} /><span>Master list</span></label>
+          <label><input type="radio" name="kind-${n}" value="new"${isNewPax ? ' checked' : ''} /><span>New passenger</span></label>
+        </div>
+        ${helpBtn('paxSource', 'Passenger source')}
       </div>
       <div class="field pax-master">
         <label class="sr-only" for="q-${n}">Passenger name (full or partial)</label>
-        <input id="q-${n}" data-k="query" autocomplete="off" placeholder="Name, full or partial (for example Pintu)" aria-describedby="q-${n}-err" />
+        <div class="with-help">
+          <input id="q-${n}" data-k="query" autocomplete="off" placeholder="Name, full or partial (for example Pintu)" aria-describedby="q-${n}-err" />
+          ${helpBtn('paxQuery', 'Passenger name')}
+        </div>
         <p class="err" id="q-${n}-err" role="alert"></p>
       </div>
       <button type="button" class="icon-btn danger remove" aria-label="Remove passenger" title="Remove passenger">
@@ -221,11 +232,11 @@ function passengerRow(p: PassengerEntry): HTMLElement {
       </button>
     </div>
     <div class="pax-new grid">
-      ${fieldHtml(`name-${n}`, 'Full name <span class="count"></span>', `<input id="name-${n}" data-k="name" maxlength="16" autocomplete="off" aria-describedby="name-${n}-err" />`, '', 'span-6')}
-      ${fieldHtml(`age-${n}`, 'Age', `<input id="age-${n}" data-k="age" inputmode="numeric" maxlength="3" autocomplete="off" aria-describedby="age-${n}-err" />`, '', 'span-2')}
-      ${fieldHtml(`gender-${n}`, 'Gender', `<select id="gender-${n}" data-k="gender">${options(['Male', 'Female', 'Transgender'], isNewPax ? p.gender : 'Male')}</select>`, '', 'span-2')}
-      ${fieldHtml(`country-${n}`, 'Country', `<input id="country-${n}" data-k="country" autocomplete="off" aria-describedby="country-${n}-err" />`, '', 'span-2')}
-      ${fieldHtml(`berth-${n}`, 'Berth preference', `<select id="berth-${n}" data-k="berth">${options(BERTHS, isNewPax ? p.berth : 'No Preference')}</select>`, '', 'span-6')}
+      ${fieldHtml(`name-${n}`, 'Full name', `<input id="name-${n}" data-k="name" maxlength="16" autocomplete="off" aria-describedby="name-${n}-err" />`, '', 'span-6', helpBtn('paxName', 'Full name'), '<span class="count"></span>')}
+      ${fieldHtml(`age-${n}`, 'Age', `<input id="age-${n}" data-k="age" inputmode="numeric" maxlength="3" autocomplete="off" aria-describedby="age-${n}-err" />`, '', 'span-2', helpBtn('paxAge', 'Age'))}
+      ${fieldHtml(`gender-${n}`, 'Gender', `<select id="gender-${n}" data-k="gender">${options(['Male', 'Female', 'Transgender'], isNewPax ? p.gender : 'Male')}</select>`, '', 'span-2', helpBtn('paxGender', 'Gender'))}
+      ${fieldHtml(`country-${n}`, 'Country', `<input id="country-${n}" data-k="country" autocomplete="off" aria-describedby="country-${n}-err" />`, '', 'span-2', helpBtn('paxCountry', 'Country'))}
+      ${fieldHtml(`berth-${n}`, 'Berth preference', `<select id="berth-${n}" data-k="berth">${options(BERTHS, isNewPax ? p.berth : 'No Preference')}</select>`, '', 'span-6', helpBtn('paxBerth', 'Berth preference'))}
     </div>`;
 
   const f = <T extends Field>(k: string) => $<T>(`[data-k=${k}]`, li);
@@ -1227,6 +1238,8 @@ setInterval(() => {
   if (view === 'list') renderList();
   else if (view === 'edit') renderHeader();
 }, 30_000);
+
+initHelp();
 
 void getStore().then((s) => {
   store = s;
