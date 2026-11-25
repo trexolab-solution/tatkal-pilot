@@ -410,29 +410,29 @@ a.btn { text-decoration: none; }
 .fine-print { margin: 20px 4px 0; color: var(--muted); font-size: 12px; }
 
 /* ---------- help buttons (?) and the shared popover ---------- */
-/* Label row: the label (or a bold title) with its (?) button. The button's 24px box is pulled in with a negative
-   margin so the row stays as tall as the text and nothing below it (e.g. the From/To swap button) moves. */
-.lbl { display: flex; align-items: center; gap: 4px; margin: 0 0 6px; min-width: 0; }
+/* Label row: the label (or a bold title) with its (?) button. The button is 16px, smaller than the text line,
+   so the row is no taller than a plain label and nothing below it (e.g. the From/To swap button) moves. */
+.lbl { display: flex; align-items: center; gap: 6px; margin: 0 0 6px; min-width: 0; }
 .lbl > label { margin: 0; }
 .set-text .lbl { margin: 0; }
-.panel-title, .title-row { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.panel-title, .title-row { display: flex; align-items: center; gap: 6px; min-width: 0; }
 .panel-title { margin: 0 0 16px; }
 .panel-title h3, .title-row h3 { margin: 0; }
 .panel-head .title-row h3 { margin: 0; }
 .lbl .count { margin-left: auto; float: none; }
-.sub-row { display: flex; align-items: center; gap: 4px; margin: 2px 0 0; flex-wrap: wrap; }
+.sub-row { display: flex; align-items: center; gap: 6px; margin: 2px 0 0; flex-wrap: wrap; }
 .sub-row .sub-line { margin: 0; }
 
-.help-btn { position: relative; flex: none; display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; margin: -3px 0; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--accent); font: inherit; font-size: 12px; font-weight: 700; line-height: 1; cursor: pointer; }
-.help-btn::before { content: ''; position: absolute; inset: 2px; border: 1.5px solid currentColor; border-radius: 50%; transition: background-color 0.15s ease; }
-.help-btn:hover::before { background: var(--accent-soft); }
-.help-btn[aria-expanded='true'] { color: var(--on-accent); }
-.help-btn[aria-expanded='true']::before { background: var(--accent); border-color: var(--accent); }
-.help-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
-.more summary .help-btn { margin: -3px 0 -3px -4px; }
+/* Small quiet 16px circle; the invisible ::after grows the click area to 24px so it stays easy to hit. */
+.help-btn { position: relative; box-sizing: border-box; flex: none; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; margin: 0; padding: 0; border: 1.25px solid currentColor; border-radius: 50%; background: none; color: var(--muted); font: inherit; font-size: 10px; font-weight: 700; line-height: 1; cursor: pointer; transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease; }
+.help-btn::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; }
+.help-btn:hover { color: var(--accent); background: var(--accent-soft); }
+.help-btn[aria-expanded='true'] { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
+.help-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.more summary .help-btn { margin-left: -2px; }
 
 /* Passenger rows: the source switch and the name query each carry a (?) beside them. */
-.pax-src { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.pax-src { display: flex; align-items: center; gap: 6px; min-width: 0; }
 .with-help { display: flex; align-items: center; gap: 4px; }
 .with-help input { flex: 1; min-width: 0; }
 

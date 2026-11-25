@@ -1,5 +1,6 @@
 import { now, syncClock } from './clock';
 import { $, $$, Cancelled, click, isVisible, sleep, waitFor } from './dom';
+import { clearHighlight, highlightClass } from './highlight';
 import { fillJourney } from './journey';
 import { addMasterPassengers, addNewPassenger } from './passengers';
 import { applyOptions } from './prefs';
@@ -76,7 +77,10 @@ function siteToast(): string {
 /** Set when the run is stopped (from the panel, the popup or another tab), so a timed wait ends at once. */
 let runStopped = false;
 watchRun((r) => {
-  if (!r.active) runStopped = true;
+  if (!r.active) {
+    runStopped = true;
+    clearHighlight(); // the run ended (Stop, error or done): take our ring off IRCTC's page
+  }
 });
 
 /**
@@ -144,7 +148,7 @@ async function openAvailability(card: HTMLElement): Promise<HTMLElement[]> {
 }
 
 function mark(target: HTMLElement, scroll: boolean) {
-  target.style.outline = '3px solid #b34700';
+  highlightClass(target);
   if (scroll) target.scrollIntoView({ block: 'center' });
 }
 
@@ -182,7 +186,7 @@ async function keepHighlighted(no: string, cls: string, book: (target: HTMLEleme
     const card = findCard(no);
     const target = card && findTarget(card, cls);
     if (target) {
-      if (!target.style.outline) mark(target, false);
+      mark(target, false); // idempotent; also puts the pulse on BOOK as soon as it appears
       book(target);
       continue;
     }
