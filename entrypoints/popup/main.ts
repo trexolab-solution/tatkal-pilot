@@ -1,3 +1,4 @@
+import { initPassengerTip, passengerCount } from '@/utils/passengerTip';
 import { timerChip } from '@/utils/timer';
 import { getProfile, getStore, problemsFor, shortDate, type SavedBooking, type Store } from '@/utils/storage';
 import type { SiteStatus } from '@/utils/site';
@@ -68,11 +69,10 @@ function bookingItem(b: SavedBooking): HTMLLIElement {
   const named = b.name.trim();
   const route = b.booking.from && b.booking.to ? `${b.booking.from} → ${b.booking.to}` : '';
   const title = named || route || 'Untitled booking';
-  const meta = [
+  const lead = [
     b.booking.trainNo ? `${b.booking.trainNo} · ${b.booking.cls}` : '',
     named ? route : '',
     b.booking.date ? shortDate(b.booking.date) : '',
-    plural(b.passengers.length, 'passenger'),
   ]
     .filter(Boolean)
     .join(' · ');
@@ -119,8 +119,10 @@ function bookingItem(b: SavedBooking): HTMLLIElement {
 
   const m = document.createElement('div');
   m.className = 'b-meta';
-  m.textContent = meta;
-  m.title = meta; // full text on hover when it is cut off
+  const text = document.createElement('span');
+  text.textContent = lead ? `${lead} · ` : '';
+  text.title = lead; // full text on hover when it is cut off
+  m.append(text, passengerCount(b.passengers)); // hover the count to see who the passengers are
   body.append(top, m);
   li.append(body, edit);
 
@@ -199,6 +201,7 @@ $('new').addEventListener('click', () => openOptions('#new'));
 $('createFirst').addEventListener('click', () => openOptions('#new'));
 
 document.getElementById('version')!.textContent = browser.runtime.getManifest().version;
+initPassengerTip(document.body);
 void ensureDailySync().catch(() => undefined); // first open of the day refreshes the station list
 
 // Not on the Web Store: tell the user when a newer GitHub release exists (link only, nothing is installed).

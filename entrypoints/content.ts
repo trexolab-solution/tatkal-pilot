@@ -1,4 +1,5 @@
 import { now } from '@/utils/clock';
+import { initPassengerTip, passengerCount } from '@/utils/passengerTip';
 import { timerChip } from '@/utils/timer';
 import { fillPassengersPage, routeStage, startRun, stop, watchRoutes } from '@/utils/run';
 import { startHarvest } from '@/utils/harvest';
@@ -118,6 +119,7 @@ const CHEVRON =
 function mountPanel(ctx: ContentScriptContext) {
   const layer = uiLayer();
   if (layer.querySelector('.panel')) return;
+  initPassengerTip(layer); // hover "N passengers" to see who they are; the tip lives outside the clipped panel
   addStyles('panel', PANEL_CSS);
 
   const panel = document.createElement('section');
@@ -304,8 +306,7 @@ function mountPanel(ctx: ContentScriptContext) {
       q('.sum').textContent = [b.trainNo, b.cls, route].filter(Boolean).join(' · ') || displayName(active);
       const sub = q('.sub');
       sub.replaceChildren();
-      const n = active.passengers.length;
-      sub.append(`${shortDate(b.date) || 'No date'} · ${n} passenger${n === 1 ? '' : 's'}`);
+      sub.append(`${shortDate(b.date) || 'No date'} · `, passengerCount(active.passengers));
       const chip = timerChip(active.booking.startAt);
       if (chip) sub.append(' · ', chip);
       const t = openingState(b.date, b.cls);

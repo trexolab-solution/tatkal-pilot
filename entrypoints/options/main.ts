@@ -1,3 +1,4 @@
+import { initPassengerTip, passengerCount } from '@/utils/passengerTip';
 import { timerChip } from '@/utils/timer';
 import {
   autoName,
@@ -542,14 +543,15 @@ function renderList() {
     const named = b.name.trim();
     const route = b.booking.from && b.booking.to ? `${b.booking.from} → ${b.booking.to}` : '';
     const title = named || route || 'Untitled booking';
-    const meta = [
+    const lead = [
       b.booking.trainNo ? `${b.booking.trainNo} · ${b.booking.cls}` : '',
       named ? route : '',
       b.booking.date ? shortDate(b.booking.date) : '',
-      plural(b.passengers.length, 'passenger'),
     ]
       .filter(Boolean)
       .join(' · ');
+    const metaEl = line('card-meta', lead ? `${lead} · ` : '');
+    metaEl.append(passengerCount(b.passengers)); // hover the count to see who the passengers are
     const missing = problemsFor(b);
     const open = openingState(b.booking.date, b.booking.cls, now);
 
@@ -559,7 +561,7 @@ function renderList() {
 
     const main = document.createElement('div');
     main.className = 'card-main';
-    main.append(line('card-title', title), line('card-meta', meta));
+    main.append(line('card-title', title), metaEl);
     const chip = timerChip(b.booking.startAt);
     if (chip) {
       chip.style.marginTop = '4px';
@@ -1077,6 +1079,7 @@ $('#clearCache').addEventListener('click', async () => {
 });
 void refreshKeyUi();
 document.getElementById('version')!.textContent = 'v' + browser.runtime.getManifest().version;
+initPassengerTip(document.body);
 void refreshStationUi();
 // First time the extension is opened each day: refresh the station list (a single request on a normal day).
 void ensureDailySync().then(() => Promise.all([refreshStationUi(), refreshKeyUi()]));
