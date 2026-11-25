@@ -45,14 +45,14 @@ export function passengerCount(list: PassengerEntry[]): HTMLElement {
 const CSS = `
 .pax-count { text-decoration: underline dotted; text-underline-offset: 3px; cursor: help; }
 .pax-count:focus-visible { outline: 2px solid #0d52c4; outline-offset: 2px; border-radius: 3px; }
-.ptip { position: fixed; left: 0; top: 0; z-index: 2147483647; box-sizing: border-box; max-width: min(280px, calc(100vw - 16px)); padding: 10px 12px; border-radius: 10px; background: #0c1c4f; color: #fff; font: 12.5px/1.4 'Open Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; box-shadow: 0 10px 28px rgb(0 0 0 / .35), 0 0 0 1px rgb(255 255 255 / .06); pointer-events: none; animation: ptip-in .12s ease-out; }
+.ptip { position: fixed; left: 0; top: 0; z-index: 2147483647; box-sizing: border-box; width: max-content; max-width: min(280px, calc(100vw - 16px)); padding: 10px 12px 11px; border: 1px solid #c9d3e8; border-radius: 10px; background: #ffffff; color: #071541; font: 500 12.5px/1.4 'Open Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; box-shadow: 0 8px 24px rgb(7 21 65 / .22), 0 1px 3px rgb(7 21 65 / .12); pointer-events: none; animation: ptip-in .12s ease-out; }
 .ptip[hidden] { display: none; }
-.ptip-h { margin: 0 0 7px; color: #aebbe0; font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; }
-.ptip ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; counter-reset: p; }
-.ptip li { display: grid; grid-template-columns: 18px minmax(0, 1fr); column-gap: 8px; align-items: start; counter-increment: p; }
-.ptip li::before { content: counter(p); display: grid; place-items: center; width: 18px; height: 18px; margin-top: 1px; border-radius: 50%; background: rgb(255 255 255 / .14); color: #fff; font-size: 11px; font-weight: 700; }
-.ptip b { display: block; font-weight: 700; overflow-wrap: anywhere; }
-.ptip small { display: block; color: #c4cfee; font-size: 11.5px; }
+.ptip-h { margin: 0 0 8px; padding: 0 0 7px; border-bottom: 1px solid #e3e9f5; color: #4a5a7d; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.ptip ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; counter-reset: p; }
+.ptip li { display: grid; grid-template-columns: 20px minmax(0, 1fr); column-gap: 8px; align-items: start; counter-increment: p; }
+.ptip li::before { content: counter(p); display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #e8f0fd; color: #0d52c4; font-size: 11px; font-weight: 700; }
+.ptip b { display: block; color: #071541; font-weight: 700; overflow-wrap: anywhere; }
+.ptip small { display: block; margin-top: 1px; color: #4a5a7d; font-size: 11.5px; font-weight: 500; }
 @keyframes ptip-in { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .ptip { animation: none; } }
 `;
