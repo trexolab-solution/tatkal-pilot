@@ -409,6 +409,7 @@ function renderForm(sb: SavedBooking) {
   input('coach').value = o.coach;
   input('gst').value = o.gst;
   input('autoCalc').checked = o.autoCalc;
+  input('autoBook').checked = o.autoBook;
   $<HTMLDetailsElement>('#moreOpts').open = !!(o.mobile || o.coach || o.gst);
   const list = $('#passengers');
   list.innerHTML = ''; // security-ok: clears the list, no content is inserted
@@ -450,6 +451,7 @@ function collect(): SavedBooking {
       coach: input('coach').value.trim(),
       gst: input('gst').value.trim(),
       autoCalc: input('autoCalc').checked,
+      autoBook: input('autoBook').checked,
     },
   };
 }
