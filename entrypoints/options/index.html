@@ -51,7 +51,7 @@
       </div>
 
       <section class="panel" aria-labelledby="h-stations">
-        <h3 id="h-stations">Stations</h3>
+        <div class="panel-title"><h3 id="h-stations">Stations</h3><button type="button" class="help-btn" data-help="stations" aria-label="Help: Stations update" aria-expanded="false">?</button></div>
         <div class="set-row">
           <div class="set-text">
             <strong id="stationCount"></strong>
@@ -62,7 +62,7 @@
       </section>
 
       <section class="panel" aria-labelledby="h-trains">
-        <h3 id="h-trains">Trains</h3>
+        <div class="panel-title"><h3 id="h-trains">Trains</h3><button type="button" class="help-btn" data-help="trains" aria-label="Help: Trains cache" aria-expanded="false">?</button></div>
         <div class="set-row">
           <div class="set-text">
             <strong id="trainCount"></strong>
@@ -74,6 +74,7 @@
         <details id="keyBox" class="more">
           <summary>
             <span class="more-title">RailCore key</span>
+            <button type="button" class="help-btn" data-help="railKey" aria-label="Help: RailCore key" aria-expanded="false">?</button>
             <span class="more-hint">Optional</span>
             <svg class="more-chev" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5l4 4 4-4" /></svg>
           </summary>
@@ -91,12 +92,12 @@
       </section>
 
       <section class="panel" aria-labelledby="h-timing">
-        <h3 id="h-timing">Retry &amp; timing</h3>
+        <div class="panel-title"><h3 id="h-timing">Retry &amp; timing</h3><button type="button" class="help-btn" data-help="timing" aria-label="Help: Retry and timing" aria-expanded="false">?</button></div>
         <p class="help">When IRCTC shows "High Load", TatkalPilot presses the button again like you would. These apply to every booking. Retrying faster than 1 second apart can get your account throttled, so values are limited.</p>
 
         <div class="set-row" role="group" aria-labelledby="presetLabel">
           <div class="set-text">
-            <strong id="presetLabel">Preset</strong>
+            <div class="lbl"><strong id="presetLabel">Preset</strong><button type="button" class="help-btn" data-help="timingPreset" aria-label="Help: Preset" aria-expanded="false">?</button></div>
             <span class="help" id="presetHelp"></span>
           </div>
           <div class="seg">
@@ -108,52 +109,52 @@
 
         <div class="grid" id="timingGrid">
           <div class="field">
-            <label for="t-availWindow">Check Availability: retry for (s)</label>
+            <div class="lbl"><label for="t-availWindow">Check Availability: retry for (s)</label><button type="button" class="help-btn" data-help="availWindow" aria-label="Help: Check Availability: retry for" aria-expanded="false">?</button></div>
             <input id="t-availWindow" data-t="availWindow" type="number" inputmode="decimal" step="any" />
             <p class="help">Keeps pressing until the classes show up, up to this long.</p>
             <p class="err" role="alert"></p>
           </div>
           <div class="field">
-            <label for="t-attemptWait">Wait after each press (s)</label>
+            <div class="lbl"><label for="t-attemptWait">Wait after each press (s)</label><button type="button" class="help-btn" data-help="attemptWait" aria-label="Help: Wait after each press" aria-expanded="false">?</button></div>
             <input id="t-attemptWait" data-t="attemptWait" type="number" inputmode="decimal" step="any" />
             <p class="help">How long one press gets before pressing again.</p>
             <p class="err" role="alert"></p>
           </div>
           <div class="field">
-            <label for="t-gapMin">Pause between retries, min (s)</label>
+            <div class="lbl"><label for="t-gapMin">Pause between retries, min (s)</label><button type="button" class="help-btn" data-help="gapMin" aria-label="Help: Pause between retries, min" aria-expanded="false">?</button></div>
             <input id="t-gapMin" data-t="gapMin" type="number" inputmode="decimal" step="any" />
             <p class="err" role="alert"></p>
           </div>
           <div class="field">
-            <label for="t-gapMax">Pause between retries, max (s)</label>
+            <div class="lbl"><label for="t-gapMax">Pause between retries, max (s)</label><button type="button" class="help-btn" data-help="gapMax" aria-label="Help: Pause between retries, max" aria-expanded="false">?</button></div>
             <input id="t-gapMax" data-t="gapMax" type="number" inputmode="decimal" step="any" />
             <p class="help">A random pause in this range, so presses are not robotic.</p>
             <p class="err" role="alert"></p>
           </div>
           <div class="field">
-            <label for="t-searchWindow">Search Trains: retry for (s)</label>
+            <div class="lbl"><label for="t-searchWindow">Search Trains: retry for (s)</label><button type="button" class="help-btn" data-help="searchWindow" aria-label="Help: Search Trains: retry for" aria-expanded="false">?</button></div>
             <input id="t-searchWindow" data-t="searchWindow" type="number" inputmode="decimal" step="any" />
             <p class="err" role="alert"></p>
           </div>
           <div class="field">
-            <label for="t-searchWait">Wait for the train list (s)</label>
+            <div class="lbl"><label for="t-searchWait">Wait for the train list (s)</label><button type="button" class="help-btn" data-help="searchWait" aria-label="Help: Wait for the train list" aria-expanded="false">?</button></div>
             <input id="t-searchWait" data-t="searchWait" type="number" inputmode="decimal" step="any" />
             <p class="help">After pressing Search, before pressing it again.</p>
             <p class="err" role="alert"></p>
           </div>
           <div class="field">
-            <label for="t-pageWait">Page load wait (s)</label>
+            <div class="lbl"><label for="t-pageWait">Page load wait (s)</label><button type="button" class="help-btn" data-help="pageWait" aria-label="Help: Page load wait" aria-expanded="false">?</button></div>
             <input id="t-pageWait" data-t="pageWait" type="number" inputmode="decimal" step="any" />
             <p class="help">Train list and passenger page.</p>
             <p class="err" role="alert"></p>
           </div>
           <div class="field">
-            <label for="t-paymentWait">Continue To Payment wait (s)</label>
+            <div class="lbl"><label for="t-paymentWait">Continue To Payment wait (s)</label><button type="button" class="help-btn" data-help="paymentWait" aria-label="Help: Continue To Payment wait" aria-expanded="false">?</button></div>
             <input id="t-paymentWait" data-t="paymentWait" type="number" inputmode="decimal" step="any" />
             <p class="err" role="alert"></p>
           </div>
           <div class="field">
-            <label for="t-reopenLimit">Reopen availability up to (times)</label>
+            <div class="lbl"><label for="t-reopenLimit">Reopen availability up to (times)</label><button type="button" class="help-btn" data-help="reopenLimit" aria-label="Help: Reopen availability up to" aria-expanded="false">?</button></div>
             <input id="t-reopenLimit" data-t="reopenLimit" type="number" inputmode="numeric" step="1" />
             <p class="help">When IRCTC resets the list after the class is highlighted.</p>
             <p class="err" role="alert"></p>
@@ -170,7 +171,7 @@
       </section>
 
       <section class="panel" aria-labelledby="h-update">
-        <h3 id="h-update">Updates</h3>
+        <div class="panel-title"><h3 id="h-update">Updates</h3><button type="button" class="help-btn" data-help="updates" aria-label="Help: Updates" aria-expanded="false">?</button></div>
         <div class="set-row">
           <div class="set-text">
             <strong id="updateTitle"></strong>
@@ -198,7 +199,7 @@
         <div class="ed-title">
           <label class="sr-only" for="name">Booking name</label>
           <input id="name" maxlength="60" autocomplete="off" placeholder="Untitled booking" />
-          <p id="edSub" class="sub-line"></p>
+          <div class="sub-row"><p id="edSub" class="sub-line"></p><button type="button" class="help-btn" data-help="bookingName" aria-label="Help: Booking name" aria-expanded="false">?</button></div>
           <span id="edTitle" hidden></span>
         </div>
         <div class="ed-actions">
@@ -220,14 +221,14 @@
         <h3 id="h-journey">Journey</h3>
         <div class="grid">
           <div class="field full">
-            <label for="trainNo">Train number or name</label>
+            <div class="lbl"><label for="trainNo">Train number or name</label><button type="button" class="help-btn" data-help="trainNo" aria-label="Help: Train number" aria-expanded="false">?</button></div>
             <input id="trainNo" autocomplete="off" placeholder="12004 or Shatabdi" aria-describedby="trainNo-info trainNo-err" />
             <p class="info" id="trainNo-info" aria-live="polite"></p>
             <p class="err" id="trainNo-err" role="alert"></p>
           </div>
           <div class="route full">
           <div class="field">
-            <label for="from">From</label>
+            <div class="lbl"><label for="from">From</label><button type="button" class="help-btn" data-help="from" aria-label="Help: From station" aria-expanded="false">?</button></div>
             <input id="from" autocomplete="off" placeholder="Station name or code" aria-describedby="from-info from-err" />
             <p class="info" id="from-info" aria-live="polite"></p>
             <p class="err" id="from-err" role="alert"></p>
@@ -236,14 +237,14 @@
             <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5h9.5M10 3l2.5 2.5L10 8M13 10.5H3.5M6 8l-2.5 2.5L6 13" /></svg>
           </button>
           <div class="field">
-            <label for="to">To</label>
+            <div class="lbl"><label for="to">To</label><button type="button" class="help-btn" data-help="to" aria-label="Help: To station" aria-expanded="false">?</button></div>
             <input id="to" autocomplete="off" placeholder="Station name or code" aria-describedby="to-info to-err" />
             <p class="info" id="to-info" aria-live="polite"></p>
             <p class="err" id="to-err" role="alert"></p>
           </div>
           </div>
           <div class="field">
-            <label for="date">Journey date</label>
+            <div class="lbl"><label for="date">Journey date</label><button type="button" class="help-btn" data-help="date" aria-label="Help: Journey date" aria-expanded="false">?</button></div>
             <input id="date" type="date" aria-describedby="date-err" />
             <div class="quick" role="group" aria-label="Quick dates">
               <button type="button" class="quick-btn" data-days="0">Today</button>
@@ -253,24 +254,23 @@
             <p class="err" id="date-err" role="alert"></p>
           </div>
           <div class="field">
-            <label for="cls">Class</label>
+            <div class="lbl"><label for="cls">Class</label><button type="button" class="help-btn" data-help="cls" aria-label="Help: Class" aria-expanded="false">?</button></div>
             <select id="cls" aria-describedby="cls-err"></select>
             <p class="err" id="cls-err" role="alert"></p>
           </div>
         </div>
 
         <div class="start-row">
-          <label class="switch">
-            <input id="autoStart" type="checkbox" role="switch" />
-            <span class="track" aria-hidden="true"></span>
-            <span class="switch-text">
-              <strong>Search at Tatkal opening time</strong>
-              <span class="help" id="startNote"></span>
+          <div class="start-switch">
+            <span class="tgl"><input id="autoStart" type="checkbox" role="switch" aria-labelledby="autoStart-l" aria-describedby="startNote" /><span class="track" aria-hidden="true"></span></span>
+            <span class="set-text">
+              <span class="lbl"><label id="autoStart-l" for="autoStart"><strong>Search at Tatkal opening time</strong></label><button type="button" class="help-btn" data-help="autoStart" aria-label="Help: Search at Tatkal opening time" aria-expanded="false">?</button></span>
+              <label class="help" id="startNote" for="autoStart"></label>
             </span>
-          </label>
+          </div>
           <button id="editStart" type="button" class="link" hidden>Change time</button>
           <div id="startAtWrap" class="field" hidden>
-            <label for="startAt">Search at (HH:MM:SS)</label>
+            <div class="lbl"><label for="startAt">Search at (HH:MM:SS)</label><button type="button" class="help-btn" data-help="startAt" aria-label="Help: Search at time" aria-expanded="false">?</button></div>
             <input id="startAt" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="10:00:00" aria-describedby="startAt-err" />
             <p class="err" id="startAt-err" role="alert"></p>
           </div>
@@ -279,7 +279,7 @@
 
       <section class="panel" aria-labelledby="h-pax">
         <div class="panel-head">
-          <h3 id="h-pax">Passengers <span id="paxMeta" class="meta" aria-live="polite"></span></h3>
+          <div class="title-row"><h3 id="h-pax">Passengers <span id="paxMeta" class="meta" aria-live="polite"></span></h3><button type="button" class="help-btn" data-help="passengers" aria-label="Help: Passengers" aria-expanded="false">?</button></div>
           <button id="add" type="button" class="btn small">
             <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
             Add passenger
@@ -297,7 +297,7 @@
         <div class="settings">
           <div class="set-row" role="group" aria-labelledby="payLabel">
             <div class="set-text">
-              <strong id="payLabel">Payment</strong>
+              <div class="lbl"><strong id="payLabel">Payment</strong><button type="button" class="help-btn" data-help="payment" aria-label="Help: Payment" aria-expanded="false">?</button></div>
               <span class="help">Chosen before Calculate Fare. UPI has the lower convenience fee.</span>
             </div>
             <div class="seg">
@@ -306,29 +306,29 @@
             </div>
           </div>
 
-          <label class="set-row">
+          <div class="set-row tgl-row">
             <span class="set-text">
-              <strong>Book only if a confirmed berth is available</strong>
-              <span id="confirmNote" class="help">Waitlist and RAC tickets are skipped. The ticket is booked only with a confirmed berth.</span>
+              <span class="lbl"><label id="confirmBerthSw-l" for="confirmBerthSw"><strong>Book only if a confirmed berth is available</strong></label><button type="button" class="help-btn" data-help="confirmBerth" aria-label="Help: Book only if a confirmed berth is available" aria-expanded="false">?</button></span>
+              <label class="help" id="confirmNote" for="confirmBerthSw">Waitlist and RAC tickets are skipped. The ticket is booked only with a confirmed berth.</label>
             </span>
-            <span class="tgl"><input id="confirmBerthSw" type="checkbox" role="switch" /><span class="track" aria-hidden="true"></span></span>
-          </label>
+            <span class="tgl"><input id="confirmBerthSw" type="checkbox" role="switch" aria-labelledby="confirmBerthSw-l" aria-describedby="confirmNote" /><span class="track" aria-hidden="true"></span></span>
+          </div>
 
-          <label class="set-row">
+          <div class="set-row tgl-row">
             <span class="set-text">
-              <strong>Consider for auto upgradation</strong>
-              <span class="help">Lets IRCTC move you to a higher class when seats are free.</span>
+              <span class="lbl"><label id="autoUpgradeSw-l" for="autoUpgradeSw"><strong>Consider for auto upgradation</strong></label><button type="button" class="help-btn" data-help="autoUpgrade" aria-label="Help: Consider for auto upgradation" aria-expanded="false">?</button></span>
+              <label class="help" id="autoUpgradeSw-h" for="autoUpgradeSw">Lets IRCTC move you to a higher class when seats are free.</label>
             </span>
-            <span class="tgl"><input id="autoUpgradeSw" type="checkbox" role="switch" /><span class="track" aria-hidden="true"></span></span>
-          </label>
+            <span class="tgl"><input id="autoUpgradeSw" type="checkbox" role="switch" aria-labelledby="autoUpgradeSw-l" aria-describedby="autoUpgradeSw-h" /><span class="track" aria-hidden="true"></span></span>
+          </div>
 
-          <label class="set-row">
+          <div class="set-row tgl-row">
             <span class="set-text">
-              <strong>Also press Calculate Fare and Continue To Payment</strong>
-              <span class="help">Off by default. Pay &amp; Book is always yours to press.</span>
+              <span class="lbl"><label id="autoCalc-l" for="autoCalc"><strong>Also press Calculate Fare and Continue To Payment</strong></label><button type="button" class="help-btn" data-help="autoCalc" aria-label="Help: Also press Calculate Fare and Continue To Payment" aria-expanded="false">?</button></span>
+              <label class="help" id="autoCalc-h" for="autoCalc">Off by default. Pay &amp; Book is always yours to press.</label>
             </span>
-            <span class="tgl"><input id="autoCalc" type="checkbox" role="switch" /><span class="track" aria-hidden="true"></span></span>
-          </label>
+            <span class="tgl"><input id="autoCalc" type="checkbox" role="switch" aria-labelledby="autoCalc-l" aria-describedby="autoCalc-h" /><span class="track" aria-hidden="true"></span></span>
+          </div>
         </div>
 
         <details id="moreOpts" class="more">
@@ -340,18 +340,18 @@
           <div class="more-body">
             <div class="grid">
               <div class="field full">
-                <label for="mobile">Mobile number <span class="opt">optional</span></label>
+                <div class="lbl"><label for="mobile">Mobile number <span class="opt">optional</span></label><button type="button" class="help-btn" data-help="mobile" aria-label="Help: Mobile number" aria-expanded="false">?</button></div>
                 <input id="mobile" inputmode="numeric" maxlength="10" autocomplete="off" placeholder="10-digit mobile number" aria-describedby="mobile-help mobile-err" />
                 <p class="help" id="mobile-help">Filled into the Mobile Number field under "Ticket details will be sent to…". If empty, IRCTC keeps your registered number.</p>
                 <p class="err" id="mobile-err" role="alert"></p>
               </div>
               <div class="field">
-                <label for="coach">Preferred coach <span class="opt">optional</span></label>
+                <div class="lbl"><label for="coach">Preferred coach <span class="opt">optional</span></label><button type="button" class="help-btn" data-help="coach" aria-label="Help: Preferred coach" aria-expanded="false">?</button></div>
                 <input id="coach" maxlength="4" autocomplete="off" placeholder="B2" aria-describedby="coach-err" />
                 <p class="err" id="coach-err" role="alert"></p>
               </div>
               <div class="field">
-                <label for="gst">GST number <span class="opt">optional</span></label>
+                <div class="lbl"><label for="gst">GST number <span class="opt">optional</span></label><button type="button" class="help-btn" data-help="gst" aria-label="Help: GST number" aria-expanded="false">?</button></div>
                 <input id="gst" maxlength="15" autocomplete="off" placeholder="15-character GSTIN" aria-describedby="gst-err" />
                 <p class="err" id="gst-err" role="alert"></p>
               </div>
