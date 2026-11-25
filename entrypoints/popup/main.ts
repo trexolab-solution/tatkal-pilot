@@ -192,6 +192,11 @@ $('manage').addEventListener('click', () => {
   void browser.runtime.openOptionsPage();
   window.close();
 });
+$('settings').addEventListener('click', () => openOptions('#settings'));
+$('guide').addEventListener('click', () => {
+  void browser.tabs.create({ url: browser.runtime.getURL('/guide.html') });
+  window.close();
+});
 $('new').addEventListener('click', () => openOptions('#new'));
 $('createFirst').addEventListener('click', () => openOptions('#new'));
 
