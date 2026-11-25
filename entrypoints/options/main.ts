@@ -223,7 +223,7 @@ function passengerRow(p: PassengerEntry): HTMLElement {
       <div class="field pax-master">
         <label class="sr-only" for="q-${n}">Passenger name (full or partial)</label>
         <div class="with-help">
-          <input id="q-${n}" data-k="query" autocomplete="off" placeholder="Name, full or partial (for example Pintu)" aria-describedby="q-${n}-err" />
+          <input id="q-${n}" data-k="query" autocomplete="off" placeholder="Saved passenger name (full or part)" aria-describedby="q-${n}-err" />
           ${helpBtn('paxQuery', 'Passenger name')}
         </div>
         <p class="err" id="q-${n}-err" role="alert"></p>

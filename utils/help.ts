@@ -19,7 +19,7 @@ export const HELP = {
   // ----- Booking editor: passengers
   passengers: 'Add up to 4 people, which is the Tatkal limit for one ticket. Pick each from your saved IRCTC list or type a new person.',
   paxSource: 'Master list means people already saved in your IRCTC account. New passenger means you type their details here.',
-  paxQuery: 'Type the saved person’s name, full or part of it, like Pintu. If several saved people match, you choose one on the IRCTC page.',
+  paxQuery: 'Type the name of a person saved in your IRCTC account, in full or in part. If several saved people match, you choose one on the IRCTC page.',
   paxName: 'Name as on the ID. IRCTC allows at most 16 characters, using letters, spaces and dots only.',
   paxAge: 'Age in years, from 1 to 125.',
   paxGender: 'Choose Male, Female or Transgender, as on the passenger’s ID.',
