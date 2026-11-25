@@ -2,7 +2,7 @@ import { choose } from './chooser';
 import { $, $$, click, isVisible, norm, setInputValue, sleep, waitFor } from './dom';
 import type { NewPassenger } from './storage';
 
-/** Names already added to the passenger list, e.g. "1. Pintu Prajapati" -> "PINTU PRAJAPATI". */
+/** Names already added to the passenger list, e.g. "1. Asha Verma" -> "ASHA VERMA". */
 function listedNames(): string[] {
   return $$('app-passenger-list .passenger-name').map((e) => norm(e.textContent).replace(/^\d+\.\s*/, ''));
 }

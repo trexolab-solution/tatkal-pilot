@@ -19,7 +19,7 @@ export const HELP = {
   // ----- Booking editor: passengers
   passengers: 'Add up to 4 people, which is the Tatkal limit for one ticket. Pick each from your saved IRCTC list or type a new person.',
   paxSource: 'Master list means people already saved in your IRCTC account. New passenger means you type their details here.',
-  paxQuery: 'Type the saved person’s name, full or part of it, like Pintu. If several saved people match, you choose one on the IRCTC page.',
+  paxQuery: 'Type the name of a person saved in your IRCTC account, in full or in part. If several saved people match, you choose one on the IRCTC page.',
   paxName: 'Name as on the ID. IRCTC allows at most 16 characters, using letters, spaces and dots only.',
   paxAge: 'Age in years, from 1 to 125.',
   paxGender: 'Choose Male, Female or Transgender, as on the passenger’s ID.',
@@ -62,14 +62,38 @@ const POP_ID = 'help-pop';
 const GAP = 8; // space between the button and the popover
 const EDGE = 8; // minimum space to the viewport edge
 
+const CONTROLS = 'input, select, textarea';
+
+const addToken = (el: Element, id: string) => {
+  const t = new Set((el.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean));
+  t.add(id);
+  el.setAttribute('aria-describedby', [...t].join(' '));
+};
+const removeToken = (el: Element, id: string) => {
+  const t = (el.getAttribute('aria-describedby') ?? '').split(/\s+/).filter((x) => x && x !== id);
+  if (t.length) el.setAttribute('aria-describedby', t.join(' '));
+  else el.removeAttribute('aria-describedby');
+};
+
+/** The (?) that belongs to a form control: the one in its field or row, else the one in its section's summary. */
+function helpFor(control: Element): HTMLButtonElement | null {
+  const box = control.closest('.field, .set-row, .start-switch, .pax-src');
+  const btn = box?.querySelector('.help-btn[data-help]') ?? control.closest('details')?.querySelector('summary .help-btn[data-help]');
+  return (btn ?? null) as HTMLButtonElement | null;
+}
+
 /**
  * Wire every `.help-btn[data-help]` on the page (also ones added later) to one shared popover.
- * Role "tooltip" fits: the content is plain text, focus stays on the button, and while the popover is
- * open the button points to it with aria-describedby. Safe to call once.
+ * Role "tooltip" fits: the content is plain text, and while the popover is open the button (and the field
+ * it was opened from) point to it with aria-describedby. Safe to call once.
+ *
+ * The (?) buttons are not in the Tab order, so Tab goes from field to field. They stay clickable, and the
+ * keyboard way is F1 on a focused field; Escape closes the help and puts focus back on that field.
  */
 export function initHelp(): void {
   let pop: HTMLDivElement | null = null;
   let current: HTMLButtonElement | null = null;
+  let returnTo: HTMLElement | null = null; // the field F1 was pressed on, if that is how the help was opened
   let watcher: MutationObserver | null = null;
 
   const ensurePop = (): HTMLDivElement => {
@@ -106,18 +130,22 @@ export function initHelp(): void {
 
   function close(refocus: boolean) {
     const btn = current;
+    const field = returnTo;
     current = null;
+    returnTo = null;
     watcher?.disconnect();
     watcher = null;
     if (pop) pop.hidden = true;
+    if (field) removeToken(field, POP_ID);
     if (btn) {
       btn.setAttribute('aria-expanded', 'false');
       btn.removeAttribute('aria-describedby');
-      if (refocus && btn.isConnected) btn.focus();
+      const back = field?.isConnected ? field : btn;
+      if (refocus && back.isConnected) back.focus();
     }
   }
 
-  function open(btn: HTMLButtonElement) {
+  function open(btn: HTMLButtonElement, from?: HTMLElement) {
     const key = btn.dataset.help as HelpKey | undefined;
     const text = key && Object.prototype.hasOwnProperty.call(HELP, key) ? HELP[key] : '';
     if (!text) return;
@@ -126,6 +154,8 @@ export function initHelp(): void {
     el.textContent = text;
     el.hidden = false;
     current = btn;
+    returnTo = from ?? null;
+    if (from) addToken(from, POP_ID);
     btn.setAttribute('aria-expanded', 'true');
     btn.setAttribute('aria-describedby', POP_ID);
     place();
@@ -153,6 +183,16 @@ export function initHelp(): void {
     if (e.key === 'Escape' && current) {
       e.preventDefault();
       close(true);
+      return;
+    }
+    // F1 on a focused field shows (or hides) its help. Without a matching (?) the browser keeps F1.
+    if (e.key === 'F1' && !e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
+      const from = document.activeElement as HTMLElement | null;
+      const btn = from?.matches(CONTROLS) ? helpFor(from) : null;
+      if (!from || !btn) return;
+      e.preventDefault();
+      if (current === btn) close(true);
+      else open(btn, from);
     }
   });
 
