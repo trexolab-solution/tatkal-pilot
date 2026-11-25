@@ -1241,20 +1241,28 @@ setInterval(() => {
 
 initHelp();
 
+/** Open what a URL hash asks for (#new, #edit=<id>, #settings). False when it asks for nothing we know. */
+function routeHash(h: string): boolean {
+  if (h === '#new') startNew();
+  else if (h.startsWith('#edit=') && store.bookings.some((b) => b.id === h.slice(6))) openBooking(h.slice(6));
+  else if (h === '#settings') showView('settings');
+  else return false;
+  return true;
+}
+
+// The popup and the page panel reuse this tab when it is already open: they only change the hash, so
+// switch to what they asked for, but never throw away unsaved changes without asking (guarded).
+window.addEventListener('hashchange', () => {
+  const h = location.hash;
+  if (!h) return;
+  history.replaceState(null, '', location.pathname); // so asking for the same thing again fires again
+  guarded(() => void routeHash(h));
+});
+
 void getStore().then((s) => {
   store = s;
   renderList();
-  if (location.hash === '#new') {
-    history.replaceState(null, '', location.pathname);
-    startNew();
-  } else if (location.hash.startsWith('#edit=') && store.bookings.some((b) => b.id === location.hash.slice(6))) {
-    const id = location.hash.slice(6);
-    history.replaceState(null, '', location.pathname);
-    openBooking(id);
-  } else if (location.hash === '#settings') {
-    history.replaceState(null, '', location.pathname);
-    showView('settings');
-  } else {
-    showView('list');
-  }
+  const h = location.hash;
+  if (h) history.replaceState(null, '', location.pathname);
+  if (!routeHash(h)) showView('list');
 });

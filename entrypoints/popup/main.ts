@@ -56,8 +56,9 @@ function showSite(tone: Tone, text: string, linkLabel?: string, onLink?: () => v
   }
 }
 
+// The background opens the page, or focuses it if it is already open, so tabs do not pile up.
 const openOptions = (hash = '') => {
-  void browser.tabs.create({ url: browser.runtime.getURL('/options.html') + hash });
+  void browser.runtime.sendMessage({ type: 'open-options', hash });
   window.close();
 };
 
@@ -188,13 +189,10 @@ async function render() {
   else showSite('ok', 'Logged in. Press Start on the IRCTC page.');
 }
 
-$('manage').addEventListener('click', () => {
-  void browser.runtime.openOptionsPage();
-  window.close();
-});
+$('manage').addEventListener('click', () => openOptions());
 $('settings').addEventListener('click', () => openOptions('#settings'));
 $('guide').addEventListener('click', () => {
-  void browser.tabs.create({ url: browser.runtime.getURL('/guide.html') });
+  void browser.runtime.sendMessage({ type: 'open-guide' });
   window.close();
 });
 $('new').addEventListener('click', () => openOptions('#new'));
