@@ -351,7 +351,9 @@ function mountPanel(ctx: ContentScriptContext) {
     state.textContent = run.active
       ? waitMs > 0
         ? `Filled. Searches automatically at ${waitingFor.slice(0, 5)}.`
-        : STATE_TEXT[run.stage]
+        : run.stage === 'passengers' && active?.options.autoBook
+          ? 'Clicking BOOK. Passengers fill automatically.'
+          : STATE_TEXT[run.stage]
       : !has
         ? 'Create a booking to get started.'
         : loggedOut

@@ -38,6 +38,7 @@ export interface Options {
   coach: string;
   gst: string;
   autoCalc: boolean; // also press Calculate Fare + Continue To Payment
+  autoBook: boolean; // press BOOK on the train list once the class is highlighted (on by default)
 }
 
 /** Everything the run needs for one booking. */
@@ -73,6 +74,7 @@ export const defaultProfile: Profile = {
     coach: '',
     gst: '',
     autoCalc: false,
+    autoBook: true,
   },
 };
 

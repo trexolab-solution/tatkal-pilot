@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TatkalPilot – How to use</title>
+    <meta name="manifest.open_in_tab" content="true" />
+    <link rel="icon" href="/icon/32.png" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <a class="skip" href="#content">Skip to the guide</a>
+
+    <header id="top" class="topbar">
+      <div class="topbar-inner">
+        <img src="/icon/48.png" width="24" height="24" alt="" />
+        <p class="brand">TatkalPilot</p>
+        <span class="chip">How to use</span>
+        <a class="top-link" href="#content">Start reading</a>
+      </div>
+    </header>
+
+    <div class="layout">
+      <nav class="toc" aria-label="Contents">
+        <h2>Contents</h2>
+        <ol>
+          <li><a href="#what">1. What it does</a></li>
+          <li><a href="#before">2. Before you start</a></li>
+          <li><a href="#create">3. Make a booking</a></li>
+          <li><a href="#settings">4. Settings page</a></li>
+          <li><a href="#irctc">5. On the IRCTC site</a></li>
+          <li><a href="#timing">6. Tatkal timing</a></li>
+          <li><a href="#help">7. If something goes wrong</a></li>
+        </ol>
+        <p class="toc-note">This guide works offline. It sends no data anywhere.</p>
+      </nav>
+
+      <main id="content" tabindex="-1">
+        <div class="hero">
+          <h1>How to use TatkalPilot</h1>
+          <p class="lede">A simple guide for your first Tatkal ticket. Read it once. It takes about 10 minutes.</p>
+          <div class="privacy">
+            <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.2" y="7" width="9.6" height="6.8" rx="1.6" /><path d="M5.4 7V5.2a2.6 2.6 0 0 1 5.2 0V7" /></svg>
+            <p><strong>Your privacy.</strong> This guide page is only text and drawings stored inside the extension. It never sends your data anywhere. It does not load anything from the internet.</p>
+          </div>
+        </div>
+
+        <!-- ================= 1. WHAT ================= -->
+        <section class="sec" id="what" aria-labelledby="h-what">
+          <h2 id="h-what"><span class="num" aria-hidden="true">1</span>What TatkalPilot does</h2>
+          <p>TatkalPilot is a Chrome extension. It helps you book a <span class="term">Tatkal</span> ticket on the IRCTC website. It types the boring parts for you, so you are faster.</p>
+
+          <div class="word">
+            <p><strong>Tatkal:</strong> a special quota for last-minute travel. Its tickets open for booking only one day before the journey. They sell out very fast.</p>
+            <p><strong>Quota:</strong> a group of seats kept for one kind of passenger. TatkalPilot always uses the Tatkal quota.</p>
+          </div>
+
+          <div class="split">
+            <div class="card yes">
+              <h3>TatkalPilot does this</h3>
+              <ul>
+                <li>Fills From, To, date and Tatkal quota.</li>
+                <li>Searches trains. It can wait and search at the exact Tatkal opening time.</li>
+                <li>Finds your train and opens its seat availability.</li>
+                <li>Marks your class with an orange box, so you press <span class="btn-name">BOOK</span> fast.</li>
+                <li>Adds your passengers, chooses payment type and fills your options.</li>
+                <li>Tries again by itself when IRCTC is slow.</li>
+              </ul>
+            </div>
+            <div class="card no">
+              <h3>TatkalPilot never does this</h3>
+              <ul>
+                <li>It never logs in for you. It never sees your password or OTP.</li>
+                <li>It never solves the captcha. You type the captcha.</li>
+                <li>It never presses <span class="btn-name">Pay &amp; Book</span>. It never touches the payment step. You pay.</li>
+                <li>It never works outside the IRCTC website.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="note info">
+            <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6.2" /><path d="M8 7.2v3.6M8 5v.1" /></svg>
+            <div><p>TatkalPilot is not made by IRCTC or Indian Railways. Use it as IRCTC's rules allow. It cannot promise you a seat.</p></div>
+          </div>
+
+          <h3>The whole job in 3 steps</h3>
+          <ol class="steps">
+            <li><strong>Save your booking once.</strong><p>Train, date, class and passengers.</p></li>
+            <li><strong>Log in to IRCTC yourself.</strong><p>Then press <span class="btn-name">Start</span> in the small TatkalPilot box on the page.</p></li>
+            <li><strong>You do the key steps.</strong><p>Press <span class="btn-name">BOOK</span>, type the captcha, and press <span class="btn-name">Pay &amp; Book</span>.</p></li>
+          </ol>
+          <div class="back"><a href="#top">Back to top <span aria-hidden="true">&uarr;</span></a></div>
+        </section>
+
+        <!-- ================= 2. BEFORE ================= -->
+        <section class="sec" id="before" aria-labelledby="h-before">
+          <h2 id="h-before"><span class="num" aria-hidden="true">2</span>Before you start</h2>
+          <p>Do these 3 things first. Do them the day before, not at 9:59 in the morning.</p>
+          <ol class="steps">
+            <li>
+              <strong>Log in to IRCTC in Chrome.</strong>
+              <p>Open <span class="btn-name">irctc.co.in</span> and sign in as you always do. TatkalPilot will not log in for you. If you are logged out, it will not start.</p>
+            </li>
+            <li>
+              <strong>Keep the IRCTC tab open.</strong>
+              <p>TatkalPilot works inside that tab. Do not close it. Do not log out.</p>
+            </li>
+            <li>
+              <strong>Save passenger names in your IRCTC "Master list".</strong>
+              <p>On IRCTC, open your account and add the people who travel with you. This saved list is called the <span class="term">Master list</span>. TatkalPilot picks names from it.</p>
+              <p>You can also type a new passenger inside TatkalPilot. A saved name is simpler.</p>
+            </li>
+          </ol>
+          <div class="note tip">
+            <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.2" /><path d="M5.2 8.3l2 2 3.6-4" /></svg>
+            <div><p><strong>Tip.</strong> If the extension was just updated or reloaded, reload the IRCTC tab once (press <kbd>F5</kbd>). An old open tab can stop working after a reload.</p></div>
+          </div>
+          <div class="back"><a href="#top">Back to top <span aria-hidden="true">&uarr;</span></a></div>
+        </section>
+
+        <!-- ================= 3. CREATE ================= -->
+        <section class="sec" id="create" aria-labelledby="h-create">
+          <h2 id="h-create"><span class="num" aria-hidden="true">3</span>Make a booking</h2>
+          <p>A "booking" here means your saved plan: which train, which day, which people. You can save many bookings.</p>
+
+          <h3>Open the booking form</h3>
+          <p>Click the TatkalPilot icon in the Chrome toolbar. A small box opens (the popup).</p>
+
+          <figure class="fig">
+            <div class="stage" role="img" aria-label="Drawing of the TatkalPilot popup. It shows one saved booking with an edit pencil, a status line, and two buttons: Manage and New booking.">
+              <div class="m narrow">
+                <div class="m-bar"><svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path d="M2 8l12-5-4 11-2-4.5z" fill="#fff" /></svg>TatkalPilot <span class="m-chip">Tatkal</span></div>
+                <div class="m-body">
+                  <div class="at">
+                    <div class="m-item"><div><b>12004 · 3A</b><small>NDLS → CNB · 25 Nov · 2 passengers</small></div><span class="m-edit"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.8 2.7l2.5 2.5-7.6 7.6-3.2.7.7-3.2z" /></svg></span></div>
+                    <span class="co tr">1</span>
+                  </div>
+                  <div class="at"><div class="m-site">Logged in. Press Start on the IRCTC page.</div><span class="co tr">2</span></div>
+                  <div class="m-row2">
+                    <div class="at"><span class="m-btn block">Manage</span><span class="co tr">3</span></div>
+                    <div class="at"><span class="m-btn pri block">New booking</span><span class="co tr">4</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <figcaption>The popup. A drawing, not a real screenshot.</figcaption>
+            <ol class="legend">
+              <li><span class="co">1</span><span>Your saved bookings. The pencil opens one to edit.</span></li>
+              <li><span class="co">2</span><span>Status line. It tells you if you are on IRCTC and logged in.</span></li>
+              <li><span class="co">3</span><span><span class="btn-name">Manage</span> opens the full page with all your bookings and Settings.</span></li>
+              <li><span class="co">4</span><span><span class="btn-name">New booking</span> opens a blank form. Click this one now.</span></li>
+            </ol>
+          </figure>
+
+          <p>The form opens in a new tab. It has 3 parts: <strong>Journey</strong>, <strong>Passengers</strong> and <strong>Booking options</strong>. When you finish, press <span class="btn-name">Save changes</span> at the bottom. Chrome keeps it on your computer.</p>
+
+          <!-- ---- Journey ---- -->
+          <h3>Part A. Journey</h3>
+          <figure class="fig">
+            <div class="stage" role="img" aria-label="Drawing of the Journey part of the booking form. Numbered marks point to: booking name, train number, From, To, journey date, class, and the Search at Tatkal opening time switch.">
+              <div class="m">
+                <div class="m-body">
+                  <div class="at"><span class="m-in" style="font-weight:800;font-size:15px">Delhi to Kanpur</span><span class="co tr">1</span></div>
+                  <div class="at"><span class="m-lbl">Train number or name</span><span class="m-in">12004 · Lucknow Shatabdi</span><span class="co tr">2</span></div>
+                  <div class="m-row2">
+                    <div class="at"><span class="m-lbl">From</span><span class="m-in">NDLS · New Delhi</span><span class="co tr">3</span></div>
+                    <div class="at"><span class="m-lbl">To</span><span class="m-in">CNB · Kanpur Central</span><span class="co tr">4</span></div>
+                  </div>
+                  <div class="m-row2">
+                    <div class="at"><span class="m-lbl">Journey date</span><span class="m-in">25-11-2026</span><span class="co tr">5</span></div>
+                    <div class="at"><span class="m-lbl">Class</span><span class="m-in">3A</span><span class="co tr">6</span></div>
+                  </div>
+                  <div class="at m-set"><span><b>Search at Tatkal opening time</b><small>Tatkal opens Tue, 24 Nov at 10:00.</small></span><span class="tg on"></span><span class="co tr">7</span></div>
+                </div>
+              </div>
+            </div>
+            <figcaption>The Journey part. Drawing only. Names and dates are examples.</figcaption>
+          </figure>
+
+          <ol class="fields">
+            <li>
+              <p class="fname"><span class="co">1</span> Booking name <span class="tag opt">optional</span></p>
+              <p>A name for you to find this booking later, for example "Home trip". If you leave it empty, TatkalPilot names it from the train, route and date.</p>
+            </li>
+            <li>
+              <p class="fname"><span class="co">2</span> Train number or name <span class="tag">needed</span></p>
+              <p>Type the 5-digit train number (like 12004) or part of its name. A list of trains appears. Pick one. The train name shows under the box.</p>
+              <p class="pick"><b>What to choose:</b> the exact train you want. Check the number on IRCTC if you are not sure.</p>
+            </li>
+            <li>
+              <p class="fname"><span class="co">3</span> From and <span class="co">4</span> To <span class="tag">needed</span></p>
+              <p>The station where you get on, and the station where you get off. Type the name or the short code (like NDLS). Pick from the list. The small swap button between them changes From and To.</p>
+              <p class="pick"><b>What to choose:</b> the same stations you would type on IRCTC.</p>
+            </li>
+            <li>
+              <p class="fname"><span class="co">5</span> Journey date <span class="tag">needed</span></p>
+              <p>The day you will travel. Not the day you book. The buttons <span class="btn-name">Today</span>, <span class="btn-name">Tomorrow</span> and <span class="btn-name">In 2 days</span> are shortcuts.</p>
+            </li>
+            <li>
+              <p class="fname"><span class="co">6</span> Class <span class="tag">needed</span> <span class="tag def">default: 3A</span></p>
+              <p>The kind of coach. Your choices are:</p>
+              <ul>
+                <li><strong>1A</strong>: First AC</li>
+                <li><strong>2A</strong>: Second AC (2 tier)</li>
+                <li><strong>3A</strong>: Third AC (3 tier)</li>
+                <li><strong>3E</strong>: Third AC Economy</li>
+                <li><strong>SL</strong>: Sleeper (no AC)</li>
+                <li><strong>CC</strong>: AC Chair Car</li>
+                <li><strong>EC</strong>: Executive Chair Car</li>
+                <li><strong>2S</strong>: Second Sitting (no AC)</li>
+              </ul>
+              <p class="pick"><b>What to choose:</b> only a class that your train really has. If the class is missing on the train, TatkalPilot stops and tells you which classes it saw. The class also decides the Tatkal opening time (see part 6).</p>
+            </li>
+            <li>
+              <p class="fname"><span class="co">7</span> Search at Tatkal opening time <span class="tag def">on for a new booking</span></p>
+              <p>This is also called auto start. When it is <strong>on</strong>, TatkalPilot fills everything first and then waits. It presses Search at the exact Tatkal opening time. It checks IRCTC's own clock so it starts on the right second. When it is <strong>off</strong>, it searches as soon as you press Start.</p>
+              <p>The time is set for you from your date and class (10:00:00 or 11:00:00). To search at another time, press <span class="btn-name">Change time</span> and type it as hours:minutes:seconds, for example 10:00:00.</p>
+              <p class="pick"><b>What to choose:</b> keep it <b>on</b> when you book at the opening time. Turn it off only when Tatkal is already open and you want to search now.</p>
+            </li>
+          </ol>
+
+          <!-- ---- Passengers ---- -->
+          <h3>Part B. Passengers</h3>
+          <p>Press <span class="btn-name">Add passenger</span> for each person. You can add up to <strong>4</strong> people. This is the Tatkal limit for one ticket. For each person, choose one of two ways:</p>
+
+          <figure class="fig">
+            <div class="stage" role="img" aria-label="Drawing of two passenger rows. The first uses Master list and shows a typed name. The second uses New passenger and shows the fields Full name, Age, Gender, Country and Berth preference.">
+              <div class="m">
+                <div class="m-body">
+                  <div class="m-pax">
+                    <div class="m-pax-top">
+                      <span class="m-n">1</span>
+                      <div class="at"><span class="m-seg"><span class="on">Master list</span><span>New passenger</span></span><span class="co tr">1</span></div>
+                    </div>
+                    <div class="at"><span class="m-in">Ravi</span><span class="co tr">2</span></div>
+                  </div>
+                  <div class="m-pax">
+                    <div class="m-pax-top">
+                      <span class="m-n">2</span>
+                      <div class="at"><span class="m-seg"><span>Master list</span><span class="on">New passenger</span></span><span class="co tr">3</span></div>
+                    </div>
+                    <div class="at"><span class="m-lbl">Full name <span style="font-weight:400;color:#4a5a7d">0/16</span></span><span class="m-in">Sunita Devi</span><span class="co tr">4</span></div>
+                    <div class="m-grid3">
+                      <div class="at"><span class="m-lbl">Age</span><span class="m-in">62</span><span class="co tr">5</span></div>
+                      <div class="at"><span class="m-lbl">Gender</span><span class="m-in">Female</span><span class="co tr">6</span></div>
+                      <div class="at"><span class="m-lbl">Country</span><span class="m-in">India</span><span class="co tr">7</span></div>
+                    </div>
+                    <div class="at"><span class="m-lbl">Berth preference</span><span class="m-in">Lower</span><span class="co tr">8</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <figcaption>The Passengers part. Drawing only.</figcaption>
+          </figure>
+
+          <ol class="fields">
+            <li>
+              <p class="fname"><span class="co">1</span> Master list <span class="tag def">default</span></p>
+              <p>Use this for a person already saved in your IRCTC Master list.</p>
+            </li>
+            <li>
+              <p class="fname"><span class="co">2</span> The name box</p>
+              <p>Type the name. A full name or only a part is fine, for example "Ravi". If two saved people match, TatkalPilot shows a small box on the IRCTC page and you pick the right one. If nobody matches, it tells you.</p>
+              <p class="pick"><b>What to choose:</b> type enough of the name so only one person matches.</p>
+            </li>
+            <li>
+              <p class="fname"><span class="co">3</span> New passenger</p>
+              <p>Use this for a person who is not in your Master list. Then fill these boxes:</p>
+            </li>
+            <li>
+              <p class="fname"><span class="co">4</span> Full name <span class="tag">needed</span></p>
+              <p>Name as on the ID. IRCTC allows only 16 letters, so a counter shows how many you used.</p>
+            </li>
+            <li>
+              <p class="fname"><span class="co">5</span> Age <span class="tag">needed</span></p>
+              <p>A number from 1 to 125.</p>
+            </li>
+            <li>
+              <p class="fname"><span class="co">6</span> Gender <span class="tag def">default: Male</span></p>
+              <p>Male, Female or Transgender.</p>
+            </li>
+            <li>
+              <p class="fname"><span class="co">7</span> Country <span class="tag def">default: India</span></p>
+              <p>Leave it as India unless the person is from another country.</p>
+            </li>
+            <li>
+              <p class="fname"><span class="co">8</span> Berth preference <span class="tag def">default: No Preference</span></p>
+              <p>The seat you would like: No Preference, Lower, Middle, Upper, Side Lower or Side Upper. It is only a wish. IRCTC may give a different berth.</p>
+              <p class="pick"><b>What to choose:</b> Lower for older people. Otherwise No Preference gives you the best chance.</p>
+            </li>
+          </ol>
+
+          <!-- ---- Options ---- -->
+          <h3>Part C. Booking options</h3>
+          <figure class="fig">
+            <div class="stage" role="img" aria-label="Drawing of the Booking options part. It shows the Payment choice and three switches, with numbered marks, then a More options section holding mobile number, preferred coach and GST number.">
+              <div class="m">
+                <div class="m-body">
+                  <div class="m-set at"><span><b>Payment</b><small>UPI has the lower fee.</small></span><span class="m-seg"><span class="on">BHIM/UPI</span><span>Cards / Net banking</span></span><span class="co tl">1</span></div>
+                  <div class="m-set at"><span><b>Book only if a confirmed berth is available</b><small>Waitlist and RAC tickets are skipped.</small></span><span class="tg on"></span><span class="co tl">2</span></div>
+                  <div class="m-set at"><span><b>Consider for auto upgradation</b><small>IRCTC may move you to a higher class.</small></span><span class="tg"></span><span class="co tl">3</span></div>
+                  <div class="m-set at"><span><b>Also press Calculate Fare and Continue To Payment</b><small>Pay &amp; Book is always yours.</small></span><span class="tg"></span><span class="co tl">4</span></div>
+                  <div class="at m-pax"><b>More options</b><div class="m-row2"><span class="m-in ph">10-digit mobile number</span><span class="m-in ph">Coach, like B2</span></div><span class="m-in ph">15-character GSTIN</span><span class="co tl">5</span></div>
+                </div>
+              </div>
+            </div>
+            <figcaption>The Booking options part. Drawing only.</figcaption>
+          </figure>
+
+          <ol class="fields">
+            <li>
+              <p class="fname"><span class="co">1</span> Payment <span class="tag def">default: BHIM/UPI</span></p>
+              <p>How you plan to pay. TatkalPilot chooses this on IRCTC before the fare is counted, because the fee depends on it. UPI has the lower convenience fee. The other choice is <strong>Cards / Net banking</strong>. You still pay yourself.</p>
+              <p class="pick"><b>What to choose:</b> BHIM/UPI if you use UPI. Otherwise Cards / Net banking.</p>
+            </li>
+            <li>
+              <p class="fname"><span class="co">2</span> Book only if a confirmed berth is available <span class="tag def">default: on</span></p>
+              <p>A <span class="term">confirmed berth</span> means a sure seat (status CNF). Other tickets are <span class="term">waitlist</span> (WL, you wait for a cancellation) or <span class="term">RAC</span> (you may only get a shared seat). When this is on, TatkalPilot ticks this choice on IRCTC, so you are not booked on a waitlist or RAC ticket. When it is off, TatkalPilot leaves the IRCTC choice as it is.</p>
+              <p class="pick"><b>What to choose:</b> keep it on if you only want a sure seat.</p>
+            </li>
+            <li>
+              <p class="fname"><span class="co">3</span> Consider for auto upgradation <span class="tag def">default: off</span></p>
+              <p><span class="term">Auto upgradation</span> lets IRCTC move you to a higher class for free when seats are empty, for example from 3A to 2A. It is not promised. When this is on, TatkalPilot ticks the choice on IRCTC. When it is off, it leaves it as it is.</p>
+              <p class="pick"><b>What to choose:</b> on, if you are happy in a higher class. Off, if you want only the class you picked.</p>
+            </li>
+            <li>
+              <p class="fname"><span class="co">4</span> Also press Calculate Fare and Continue To Payment <span class="tag def">default: off</span></p>
+              <p>When it is off, you press <span class="btn-name">Calculate Fare</span> yourself. When it is on, TatkalPilot presses <span class="btn-name">Calculate Fare</span> and then <span class="btn-name">Continue To Payment</span> for you. It stops on the payment page. It never presses <span class="btn-name">Pay &amp; Book</span>.</p>
+              <p class="pick"><b>What to choose:</b> off while you are learning. Turn it on later to save a few seconds.</p>
+            </li>
+            <li>
+              <p class="fname"><span class="co">5</span> More options <span class="tag opt">all optional</span></p>
+              <p>Press <span class="btn-name">More options</span> to open it. All three boxes can stay empty.</p>
+              <ul>
+                <li><strong>Mobile number:</strong> 10 digits. IRCTC sends ticket details here. If you leave it empty, IRCTC uses the number saved in your account.</li>
+                <li><strong>Preferred coach:</strong> a coach name like B2, up to 4 characters. It is a wish only. IRCTC may not follow it.</li>
+                <li><strong>GST number:</strong> 15 characters. <span class="term">GST</span> means Goods and Services Tax. Fill this only if a company needs a tax invoice for this ticket. Most people leave it empty.</li>
+              </ul>
+            </li>
+          </ol>
+
+          <div class="note warn">
+            <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M8 2.2l6.2 11H1.8L8 2.2z" /><path d="M8 6.6v3M8 11.6v.1" /></svg>
+            <div>
+              <p><strong>Save before you leave.</strong> Press <span class="btn-name">Save changes</span>. If the form is not complete, TatkalPilot shows what is missing: a 4 or 5 digit train number, From, To, date, class and at least one passenger.</p>
+              <p>The <span class="btn-name">Duplicate</span> button copies a booking. It is useful when you book the same trip for another day. <span class="btn-name">Delete</span> removes a booking.</p>
+            </div>
+          </div>
+          <div class="back"><a href="#top">Back to top <span aria-hidden="true">&uarr;</span></a></div>
+        </section>
+
+        <!-- ================= 4. SETTINGS ================= -->
+        <section class="sec" id="settings" aria-labelledby="h-settings">
+          <h2 id="h-settings"><span class="num" aria-hidden="true">4</span>The Settings page</h2>
+          <p>Press <span class="btn-name">Manage</span> in the popup, then open the <span class="btn-name">Settings</span> tab at the top. You can use TatkalPilot without changing anything here. The defaults are fine for most people.</p>
+
+          <h3>Stations</h3>
+          <p>It shows how many stations are saved. A built-in list is already inside the extension, so it works offline. TatkalPilot also refreshes the list from the internet once a day. Press <span class="btn-name">Update now</span> to refresh at once. If an update fails, it keeps using the saved list.</p>
+
+          <h3>Trains</h3>
+          <p>It shows how many trains TatkalPilot remembers. It learns train names from the IRCTC train list while you use IRCTC, and it also has a built-in list. Press <span class="btn-name">Clear cache</span> to forget the trains it learned. You can use this if a train name looks wrong. It is safe.</p>
+
+          <h3>RailCore key <span class="tag opt" style="font-size:12px;font-weight:600;padding:2px 10px;border-radius:999px;background:#f5f8fd;color:#4a5a7d;border:1px solid #e3e9f5">optional</span></h3>
+          <p>A key is like a small password for a free service called RailCore. With a key, the train box in your booking can search live trains. Without a key, everything still works. Press <span class="btn-name">RailCore key</span> to open the box, paste the key and press <span class="btn-name">Save</span>. <span class="btn-name">Remove</span> deletes it. A link there helps you get a free key.</p>
+          <div class="note info">
+            <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6.2" /><path d="M8 7.2v3.6M8 5v.1" /></svg>
+            <div><p>Not sure? Skip the key. You never need it.</p></div>
+          </div>
+
+          <h3>Retry &amp; timing</h3>
+          <p>Sometimes IRCTC is too busy and shows a "High Load" message. A person would press the button again. TatkalPilot does the same, a limited number of times. These settings decide how long it tries. They are used for every booking.</p>
+
+          <figure class="fig">
+            <div class="stage" role="img" aria-label="Drawing of the Retry and timing part of Settings. It shows the Preset choice with Normal, Heavy load and Custom, and one number box.">
+              <div class="m">
+                <div class="m-body">
+                  <div class="m-set at"><span><b>Preset</b><small>The tested defaults.</small></span><span class="m-seg"><span class="on">Normal</span><span>Heavy load</span><span>Custom</span></span><span class="co tl">1</span></div>
+                  <div class="at"><span class="m-lbl">Check Availability: retry for (s)</span><span class="m-in">60</span><span class="co tr">2</span></div>
+                  <div class="at" style="justify-self:end"><span class="m-btn pri">Save timing</span><span class="co tl">3</span></div>
+                </div>
+              </div>
+            </div>
+            <figcaption>Retry &amp; timing. Drawing only.</figcaption>
+            <ol class="legend">
+              <li><span class="co">1</span><span>Choose a preset.</span></li>
+              <li><span class="co">2</span><span>Number boxes. They can be changed only with <strong>Custom</strong>.</span></li>
+              <li><span class="co">3</span><span>Press <span class="btn-name">Save timing</span> after a change.</span></li>
+            </ol>
+          </figure>
+
+          <h4>The 3 presets</h4>
+          <ul>
+            <li><strong>Normal</strong>: the tested defaults. Use this on most days.</li>
+            <li><strong>Heavy load</strong>: the same speed, but it keeps trying for 90 seconds instead of 60. Use it on very busy mornings.</li>
+            <li><strong>Custom</strong>: your own numbers.</li>
+          </ul>
+
+          <h4>Each box, in simple words</h4>
+          <p>All times are in seconds (s).</p>
+          <div class="tbl-wrap">
+            <table>
+              <caption>Retry &amp; timing boxes</caption>
+              <thead><tr><th>Box name</th><th>What it means</th><th class="n">Normal</th><th class="n">Heavy</th><th class="n">Allowed</th></tr></thead>
+              <tbody>
+                <tr><td>Check Availability: retry for (s)</td><td>TatkalPilot keeps pressing Check Availability until the classes show up. It gives up after this long.</td><td class="n">60</td><td class="n">90</td><td class="n">10 to 180</td></tr>
+                <tr><td>Wait after each press (s)</td><td>How long one press gets to show a result before pressing again.</td><td class="n">5</td><td class="n">5</td><td class="n">2 to 30</td></tr>
+                <tr><td>Pause between retries, min (s)</td><td>The shortest rest before pressing again.</td><td class="n">1.5</td><td class="n">1.5</td><td class="n">1 to 10</td></tr>
+                <tr><td>Pause between retries, max (s)</td><td>The longest rest. TatkalPilot picks a random time between min and max, so the presses are not robotic.</td><td class="n">2</td><td class="n">2</td><td class="n">1 to 15</td></tr>
+                <tr><td>Search Trains: retry for (s)</td><td>If the train list does not open, it presses Search again. It gives up after this long.</td><td class="n">60</td><td class="n">90</td><td class="n">10 to 180</td></tr>
+                <tr><td>Wait for the train list (s)</td><td>After pressing Search, how long it waits before pressing again.</td><td class="n">12</td><td class="n">12</td><td class="n">3 to 60</td></tr>
+                <tr><td>Page load wait (s)</td><td>How long it waits for the train list and for the passenger page to load.</td><td class="n">60</td><td class="n">90</td><td class="n">10 to 180</td></tr>
+                <tr><td>Continue To Payment wait (s)</td><td>How long it waits for the Continue To Payment button. Used only if you turned on the Calculate Fare option.</td><td class="n">15</td><td class="n">15</td><td class="n">5 to 60</td></tr>
+                <tr><td>Reopen availability up to (times)</td><td>Sometimes IRCTC resets the list after your class is marked. TatkalPilot then opens availability again. This is how many times it may do that.</td><td class="n">8</td><td class="n">8</td><td class="n">1 to 20</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note warn">
+            <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M8 2.2l6.2 11H1.8L8 2.2z" /><path d="M8 6.6v3M8 11.6v.1" /></svg>
+            <div><p><strong>Do not make the pause shorter than 1 second.</strong> Pressing too fast can get your IRCTC account slowed down (throttled). The page does not allow less than 1 second. <span class="btn-name">Reset to defaults</span> brings back the Normal values.</p></div>
+          </div>
+
+          <h3>Updates</h3>
+          <p>TatkalPilot is not on the Chrome Web Store. So it looks at GitHub once a day to see if a new version is out. Press <span class="btn-name">Check now</span> to look right away. If a new version exists, a <span class="btn-name">Download</span> button appears. The popup shows an "Update available" link, and the toolbar icon shows a small NEW mark. Nothing is installed for you. See <a href="#help">part 7</a> for the update steps.</p>
+          <div class="back"><a href="#top">Back to top <span aria-hidden="true">&uarr;</span></a></div>
+        </section>
+
+        <!-- ================= 5. IRCTC ================= -->
+        <section class="sec" id="irctc" aria-labelledby="h-irctc">
+          <h2 id="h-irctc"><span class="num" aria-hidden="true">5</span>On the IRCTC site</h2>
+          <p>Open <span class="btn-name">irctc.co.in</span> and log in. A small blue box called TatkalPilot appears at the bottom right of the page. This is the <strong>floating panel</strong>. You press Start here, not in the popup.</p>
+
+          <figure class="fig">
+            <div class="stage wide" role="img" aria-label="Drawing of an IRCTC page with the TatkalPilot floating panel at the bottom right. Numbered marks point to: the drag handle, the title, the manage icon, the booking summary with edit pencil, the four progress steps Search, Train, Passengers, Review, the status text, and the Start button.">
+              <div class="site">
+                <div class="site-top"><i></i><i></i><i></i> irctc.co.in</div>
+                <div class="site-body">
+                  <div class="ghost w60"></div><div class="ghost tall"></div><div class="ghost w80"></div><div class="ghost w40"></div>
+                  <p class="site-note">The IRCTC page (drawn as plain boxes)</p>
+                </div>
+                <div class="float">
+                  <div class="bar">
+                    <span class="at"><svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><circle cx="5.5" cy="3.5" r="1.25" /><circle cx="10.5" cy="3.5" r="1.25" /><circle cx="5.5" cy="8" r="1.25" /><circle cx="10.5" cy="8" r="1.25" /><circle cx="5.5" cy="12.5" r="1.25" /><circle cx="10.5" cy="12.5" r="1.25" /></svg><span class="co tl" style="top:-12px;left:-10px">1</span></span>
+                    <span class="dot"></span>
+                    <span class="at">TatkalPilot <span class="in">Logged in</span><span class="co tr" style="top:-12px;right:-14px">2</span></span>
+                    <span class="at sp"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6.2 4.5h7.3M6.2 8h7.3M6.2 11.5h7.3" /><path d="M2.6 4.5h.01M2.6 8h.01M2.6 11.5h.01" stroke-width="2.2" /></svg><span class="co tr" style="top:-12px;right:-12px">3</span></span>
+                  </div>
+                  <div class="fb">
+                    <div class="at" style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start">
+                      <div><div class="sum">12004 · 3A · NDLS → CNB</div><div class="sub">25 Nov · 2 passengers · Opens in 2h 10m</div></div>
+                      <span class="m-edit"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.8 2.7l2.5 2.5-7.6 7.6-3.2.7.7-3.2z" /></svg></span>
+                      <span class="co tr">4</span>
+                    </div>
+                    <div class="at"><ol class="pbar"><li class="done">Search</li><li class="now">Train</li><li>Passengers</li><li>Review</li></ol><span class="co tr" style="top:-14px">5</span></div>
+                    <div class="at"><span style="color:#3a414c">Finding your train…</span><span class="co tr" style="top:-8px">6</span></div>
+                    <div class="at"><span class="m-btn pri block">Start</span><span class="co tr">7</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <figcaption>The floating panel on the IRCTC page. Drawing only, not a real screenshot.</figcaption>
+            <ol class="legend">
+              <li><span class="co">1</span><span>The dotted handle. Drag it to move the panel. With the keyboard, press the arrow keys on it.</span></li>
+              <li><span class="co">2</span><span>The title. Click it to open or close the panel. The badge shows if you are logged in.</span></li>
+              <li><span class="co">3</span><span>Manage bookings. Opens the full page.</span></li>
+              <li><span class="co">4</span><span>The booking that will run. The pencil is the <strong>Edit</strong> button. If you saved 2 or more bookings, a list box appears above, so you can choose.</span></li>
+              <li><span class="co">5</span><span>Progress: Search, Train, Passengers, Review.</span></li>
+              <li><span class="co">6</span><span>What TatkalPilot is doing now, in words.</span></li>
+              <li><span class="co">7</span><span><span class="btn-name">Start</span>. While a run is going, it changes to <span class="btn-name">Restart</span> and a <span class="btn-name">Stop</span> button appears.</span></li>
+            </ol>
+          </figure>
+
+          <div class="note info">
+            <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6.2" /><path d="M8 7.2v3.6M8 5v.1" /></svg>
+            <div>
+              <p>If you are not logged in, the panel shows "Login required" and an <span class="btn-name">Open login</span> button. There is no Start button until you log in.</p>
+              <p>No booking saved yet? The panel says so, and the button says <span class="btn-name">Create booking</span>. It opens the booking form.</p>
+            </div>
+          </div>
+
+          <h3>The 4 steps of a run</h3>
+          <p>Press <span class="btn-name">Start</span>. TatkalPilot goes through 4 steps. At each step, some work is done for you and some work is yours.</p>
+
+          <ol class="journey" aria-label="The four steps">
+            <li>
+              <b>Search</b>
+              <small>Fills From, To, date and Tatkal. Presses Search. If you chose a time, it waits and presses Search at that time.</small>
+              <span class="who auto">TatkalPilot</span>
+            </li>
+            <li>
+              <b>Train</b>
+              <small>Finds your train, opens availability and marks your class with an orange box.</small>
+              <span class="who you">You press BOOK</span>
+            </li>
+            <li>
+              <b>Passengers</b>
+              <small>Adds passengers, chooses payment, fills your options.</small>
+              <span class="who you">You press Calculate Fare</span>
+            </li>
+            <li>
+              <b>Review</b>
+              <small>Check the fare and details. Optionally it presses Continue To Payment for you.</small>
+              <span class="who you">You do captcha and Pay &amp; Book</span>
+            </li>
+          </ol>
+
+          <h4>Step 1. Search</h4>
+          <p>TatkalPilot checks you are logged in. It fills the journey and the Tatkal quota. Then it presses <span class="btn-name">Search</span>. If you turned on "Search at Tatkal opening time", the panel says "Filled. Searches automatically at 10:00." and waits. If IRCTC does not open the train list, it presses Search again for a while, as set in Settings.</p>
+          <p><strong>You:</strong> wait. Do not click on the page.</p>
+
+          <h4>Step 2. Train</h4>
+          <p>It looks for your train number in the list. It presses <span class="btn-name">Check Availability</span>, again and again if needed. Then it draws an <strong>orange box</strong> around your class and shows a message "press BOOK now".</p>
+          <p><strong>You:</strong> press <span class="btn-name">BOOK</span> inside the orange box. TatkalPilot does not press it. If IRCTC resets the list after the box appears, TatkalPilot opens availability again and marks your class again, so you need only one press.</p>
+          <p>If <span class="btn-name">BOOK</span> is not there, Tatkal may not be open yet.</p>
+
+          <h4>Step 3. Passengers</h4>
+          <p>On the passenger page, TatkalPilot adds your Master list people, then your new passengers. It sets the mobile number, payment, and the options you chose. A message says "Passenger details filled. Press Calculate Fare." If some detail failed, the message tells you what to fix by hand.</p>
+          <p><strong>You:</strong> look at the names and details. Then press <span class="btn-name">Calculate Fare</span>, unless you turned that option on.</p>
+          <p>If a page was already open, press <span class="btn-name">Fill passengers on this page</span> in the panel to fill it again.</p>
+
+          <h4>Step 4. Review</h4>
+          <p>The panel says "Check the fare, then continue." If you turned on the Calculate Fare option, TatkalPilot has pressed <span class="btn-name">Calculate Fare</span> and then <span class="btn-name">Continue To Payment</span>, and it stops on the payment page. If the option is off, it does nothing more.</p>
+          <p><strong>You:</strong> read the fare. Type the <strong>captcha</strong>. Press <span class="btn-name">Pay &amp; Book</span> and pay. This is always yours.</p>
+
+          <div class="note tip">
+            <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.2" /><path d="M5.2 8.3l2 2 3.6-4" /></svg>
+            <div>
+              <p><strong>Helpful extras.</strong> TatkalPilot closes the tutorial pop-ups that IRCTC shows. When IRCTC says "Please confirm the booking details" because the train starts at a different station, it presses Continue Booking and tells you the station. If IRCTC asks "proceed booking without any preferences?", it does <strong>not</strong> answer. It tells you to press Yes or No yourself.</p>
+            </div>
+          </div>
+
+          <h3>Stop, Restart and Edit</h3>
+          <ul>
+            <li><span class="btn-name">Stop</span> ends the run now. You can also press <span class="btn-name">Stop run</span> in the popup. A run also stops by itself if you log out of IRCTC.</li>
+            <li><span class="btn-name">Restart</span> starts again from the beginning. Use it after an error message.</li>
+            <li>The <strong>Edit</strong> pencil opens your booking to change it. Save the change, then press Start again. You cannot change the booking list box while a run is going.</li>
+          </ul>
+          <div class="back"><a href="#top">Back to top <span aria-hidden="true">&uarr;</span></a></div>
+        </section>
+
+        <!-- ================= 6. TIMING ================= -->
+        <section class="sec" id="timing" aria-labelledby="h-timing">
+          <h2 id="h-timing"><span class="num" aria-hidden="true">6</span>Tatkal timing tips</h2>
+          <p>Tatkal tickets open <strong>one day before</strong> the journey date. The time depends on the class you choose.</p>
+
+          <figure class="fig">
+            <div class="stage wide" role="img" aria-label="Two cards. AC classes 1A, 2A, 3A, 3E, CC and EC: Tatkal opens at 10:00 the day before. Other classes such as SL and 2S: Tatkal opens at 11:00 the day before.">
+              <div class="clock">
+                <div><span class="ttl">AC classes</span><span class="big">10:00</span><small>1A, 2A, 3A, 3E, CC, EC</small><small>one day before the journey</small></div>
+                <div><span class="ttl">Other classes</span><span class="big">11:00</span><small>SL, 2S</small><small>one day before the journey</small></div>
+              </div>
+            </div>
+            <figcaption>Opening time by class (morning, local time).</figcaption>
+          </figure>
+
+          <p><strong>Example.</strong> You travel on 25 November in 3A. Tatkal for 3A opens on 24 November at 10:00. For Sleeper (SL) on the same trip, it opens on 24 November at 11:00.</p>
+
+          <h3>Tips</h3>
+          <ol class="steps">
+            <li><strong>Let TatkalPilot choose the time.</strong><p>With "Search at Tatkal opening time" on, it sets 10:00:00 or 11:00:00 from your class and date. You see the day and time next to the switch.</p></li>
+            <li><strong>Check your computer's date and time.</strong><p>The opening time follows your computer's clock. Set it to Indian time (IST). When the search runs, TatkalPilot also measures IRCTC's own clock, so the press lands on the right second.</p></li>
+            <li><strong>Press Start a few minutes early.</strong><p>For example 5 minutes before. Be logged in first. Do not press Start hours early. A run that waits more than about 30 minutes can expire, and then you must press Start again.</p></li>
+            <li><strong>If the time has already passed,</strong><p>TatkalPilot does not wait. It searches at once.</p></li>
+            <li><strong>Keep watching the orange box.</strong><p>When it appears, press BOOK quickly.</p></li>
+            <li><strong>Watch the timer.</strong><p>The popup and the panel show "Opens in …", "Tatkal open" or "Journey date passed" for each booking.</p></li>
+          </ol>
+          <div class="note warn">
+            <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M8 2.2l6.2 11H1.8L8 2.2z" /><path d="M8 6.6v3M8 11.6v.1" /></svg>
+            <div><p>The times above come from TatkalPilot's own rule: AC classes at 10:00 and the others at 11:00. If IRCTC changes its timing, set your own time with <span class="btn-name">Change time</span>. Nobody can promise a confirmed seat.</p></div>
+          </div>
+          <div class="back"><a href="#top">Back to top <span aria-hidden="true">&uarr;</span></a></div>
+        </section>
+
+        <!-- ================= 7. HELP ================= -->
+        <section class="sec" id="help" aria-labelledby="h-help">
+          <h2 id="h-help"><span class="num" aria-hidden="true">7</span>If something goes wrong</h2>
+          <p>Press a question to open the answer.</p>
+
+          <details class="q">
+            <summary>IRCTC says "High Load" or looks stuck</summary>
+            <div class="qb">
+              <p>This means IRCTC is too busy. It is normal at Tatkal time. You do not need to do anything first. TatkalPilot presses the button again by itself, like a person would, but only for a limited time.</p>
+              <ul>
+                <li>The panel shows lines like "Check Availability: attempt 3 (retrying up to 40s)…" or "Searching again (#2, up to 50s left)…".</li>
+                <li>If it still fails when time is over, a red message appears. Then press <span class="btn-name">Start</span> or <span class="btn-name">Restart</span> to try again.</li>
+                <li>On a busy day choose the <strong>Heavy load</strong> preset in Settings. It keeps trying for 90 seconds.</li>
+                <li>Do not set the pauses very short. That can get your account slowed down.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="q">
+            <summary>Availability does not load, or the train is not found</summary>
+            <div class="qb">
+              <span class="msg">Availability did not load after … attempts … Press Start to try again.</span>
+              <ul>
+                <li>Press <span class="btn-name">Restart</span> in the panel.</li>
+                <li>If the message says the train was not found in the list, check that the train runs on that date and between those stations. Open Edit and check the train number, From, To and date.</li>
+                <li>If it says <em>Class … not found on train …</em>, the train has no such class. It shows the classes it saw. Change the class and save.</li>
+                <li>If it says "Availability keeps resetting. Please check it manually.", IRCTC has reset the list many times. Open availability yourself and press BOOK.</li>
+                <li>If it says "BOOK is not available yet (Tatkal not open?)", wait for the opening time and then press Restart.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="q">
+            <summary>"You are not logged in" or the Start button is missing</summary>
+            <div class="qb">
+              <span class="msg">You are not logged in. Log in to IRCTC, then press Start.</span>
+              <ol>
+                <li>Log in on the IRCTC page. You can use the <span class="btn-name">Open login</span> button in the panel.</li>
+                <li>Wait until the panel badge says <strong>Logged in</strong>.</li>
+                <li>Press <span class="btn-name">Start</span>.</li>
+              </ol>
+              <p>If IRCTC logs you out in the middle of a run, TatkalPilot stops the run on purpose.</p>
+            </div>
+          </details>
+
+          <details class="q">
+            <summary>"Complete the booking first" or the booking says Incomplete</summary>
+            <div class="qb">
+              <p>Something needed is empty. The message lists it. Press the pencil (Edit), fill the missing item and press <span class="btn-name">Save changes</span>. A booking needs a 4 or 5 digit train number, From, To, a date, a class and at least one passenger.</p>
+            </div>
+          </details>
+
+          <details class="q">
+            <summary>The popup says the IRCTC tab needs a reload</summary>
+            <div class="qb">
+              <p>This happens after the extension was updated or reloaded. Press <span class="btn-name">Reload IRCTC tab</span> in the popup, or press <kbd>F5</kbd> on the IRCTC page. If no IRCTC tab is open, press <span class="btn-name">Open IRCTC website</span>. If you are on another tab, press <span class="btn-name">Go to IRCTC tab</span>.</p>
+            </div>
+          </details>
+
+          <details class="q">
+            <summary>A passenger was not added</summary>
+            <div class="qb">
+              <ul>
+                <li>"No passenger matching … in your IRCTC master list": the name is not saved on IRCTC. Add that person in your IRCTC Master list, or use <strong>New passenger</strong>.</li>
+                <li>"Several saved passengers match": a small box opens on the IRCTC page. Pick the right person.</li>
+                <li>Add the names in the Master list one day before, not at Tatkal time.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="q" id="update">
+            <summary>An update is available. How do I install it?</summary>
+            <div class="qb">
+              <p>You see a NEW mark on the toolbar icon, an "Update available" link in the popup, or a Download button in Settings. Because TatkalPilot is not on the Chrome Web Store, you install the update by hand. It takes 2 minutes.</p>
+              <ol class="steps">
+                <li><strong>Download.</strong><p>Press the <span class="btn-name">Download</span> link. It opens the Releases page on GitHub. Download the file named <span class="btn-name">tatkal-pilot-…-chrome.zip</span>. Only download it from that link.</p></li>
+                <li><strong>Unzip over the old folder.</strong><p>Unzip the file into the <strong>same folder</strong> you used before. Choose to replace the old files.</p></li>
+                <li><strong>Press Reload.</strong><p>In Chrome, type <span class="btn-name">chrome://extensions</span> in the address bar. Find TatkalPilot. Press the <span class="btn-name">Reload</span> (round arrow) button on its card.</p></li>
+                <li><strong>Reload your IRCTC tab.</strong><p>Press <kbd>F5</kbd> on the IRCTC page.</p></li>
+              </ol>
+              <p>Use the same folder. Chrome knows the extension by its folder. A different folder may be treated as a new extension, and your saved bookings may not come with it. To be safe, check your bookings after the update. The version number is at the bottom of this page and on the Settings page.</p>
+            </div>
+          </details>
+
+          <details class="q">
+            <summary>First-time install</summary>
+            <div class="qb">
+              <ol>
+                <li>Download the zip from the Releases page and unzip it to a folder you will keep.</li>
+                <li>Open <span class="btn-name">chrome://extensions</span> and turn on <strong>Developer mode</strong>.</li>
+                <li>Press <span class="btn-name">Load unpacked</span> and choose the unzipped folder.</li>
+                <li>Click the puzzle icon in Chrome and pin TatkalPilot, so it is easy to find.</li>
+              </ol>
+            </div>
+          </details>
+
+          <div class="note info">
+            <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6.2" /><path d="M8 7.2v3.6M8 5v.1" /></svg>
+            <div><p><strong>Remember.</strong> Login, captcha and <span class="btn-name">Pay &amp; Book</span> always stay with you. TatkalPilot only saves you typing.</p></div>
+          </div>
+          <div class="back"><a href="#top">Back to top <span aria-hidden="true">&uarr;</span></a></div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="foot">
+      <p>TatkalPilot <span id="version"></span> · Built by Pintu Prajapati · Unofficial tool, not affiliated with IRCTC or Indian Railways.</p>
+      <p>This guide never sends data anywhere. All pictures are drawings made for this guide. They are not IRCTC screenshots.</p>
+    </footer>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

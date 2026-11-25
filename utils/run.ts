@@ -138,10 +138,31 @@ function mark(target: HTMLElement, scroll: boolean) {
 }
 
 /**
- * After the class is highlighted the user presses BOOK. If the site resets the list on an
- * error (cards vanish), open availability again and re-highlight, so only one click is needed.
+ * Presses BOOK for the user when "Click BOOK for me" is on. Like a person, it presses again if the
+ * page is still the train list after one press (site overloaded), but only inside the retry window.
+ * Returns true when it pressed. Pay & Book is never touched.
  */
-async function keepHighlighted(no: string, cls: string) {
+function autoBooker(enabled: boolean) {
+  let first = 0;
+  let last = 0;
+  return (target: HTMLElement): boolean => {
+    if (!enabled || runStopped) return false;
+    const btn = target.querySelector<HTMLButtonElement>('.btn-book');
+    if (!btn || btn.disabled) return false;
+    const t = Date.now();
+    if (first && (t - first > ms(T.availWindow) || t - last < ms(T.attemptWait))) return false;
+    first ||= t;
+    last = t;
+    click(btn);
+    return true;
+  };
+}
+
+/**
+ * After the class is highlighted, BOOK is pressed (by us, or by the user when auto-book is off). If the
+ * site resets the list on an error (cards vanish), open availability again and re-highlight.
+ */
+async function keepHighlighted(no: string, cls: string, book: (target: HTMLElement) => boolean) {
   let reopens = 0;
   while (routeStage() === 'list') {
     await sleep(1500);
@@ -150,6 +171,7 @@ async function keepHighlighted(no: string, cls: string) {
     const target = card && findTarget(card, cls);
     if (target) {
       if (!target.style.outline) mark(target, false);
+      book(target);
       continue;
     }
     if (!card) continue; // list is re-rendering
@@ -163,7 +185,7 @@ async function keepHighlighted(no: string, cls: string) {
       const again = findTarget(card, cls);
       if (again) {
         mark(again, true);
-        toast('Availability reopened. Press BOOK.', 'info');
+        if (!book(again)) toast('Availability reopened. Press BOOK.', 'info');
       }
     } catch (e) {
       toast(e instanceof Error ? e.message : String(e), 'error');
@@ -190,12 +212,14 @@ async function stageList(p: Profile) {
   }
   await setRun({ stage: 'passengers' });
   mark(target, true);
+  const book = autoBooker(p.options.autoBook);
   if (target.querySelector('.btn-book')) {
-    toast(`Train ${no} · ${p.booking.cls}: press BOOK now`, 'info', 8000);
+    if (book(target)) toast(`Train ${no} · ${p.booking.cls}: clicking BOOK…`, 'info', 4000);
+    else toast(`Train ${no} · ${p.booking.cls}: press BOOK now`, 'info', 8000);
   } else {
     toast(`Train ${no} · ${p.booking.cls}: BOOK is not available yet (Tatkal not open?)`, 'error');
   }
-  void keepHighlighted(no, p.booking.cls);
+  void keepHighlighted(no, p.booking.cls, book);
 }
 
 export async function fillPassengersPage(p: Profile): Promise<void> {
