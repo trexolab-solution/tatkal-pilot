@@ -2,14 +2,27 @@ import { now } from './clock';
 
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-/** Poll until `fn` returns a truthy value, or throw after `timeout` ms. */
+/** Thrown when a run is stopped or restarted while a step was waiting. Not an error to show the user. */
+export class Cancelled extends Error {
+  constructor() {
+    super('Cancelled');
+    this.name = 'Cancelled';
+  }
+}
+
+/**
+ * Poll until `fn` returns a truthy value, or throw after `timeout` ms.
+ * If `cancelled` turns true while waiting, throws `Cancelled` straight away.
+ */
 export async function waitFor<T>(
   fn: () => T | null | undefined | false,
   what: string,
   timeout = 5000,
+  cancelled?: () => boolean,
 ): Promise<T> {
   const start = Date.now();
   while (Date.now() - start < timeout) {
+    if (cancelled?.()) throw new Cancelled();
     const v = fn();
     if (v) return v;
     await sleep(60);
