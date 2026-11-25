@@ -196,7 +196,7 @@ const options = (values: string[], selected: string) =>
 
 /** Static "(?)" button markup. Only fixed keys and labels go in, never user data. */
 const helpBtn = (key: HelpKey, name: string) =>
-  `<button type="button" class="help-btn" data-help="${key}" aria-label="Help: ${name}" aria-expanded="false">?</button>`;
+  `<button type="button" class="help-btn" tabindex="-1" data-help="${key}" aria-label="Help: ${name}" aria-expanded="false">?</button>`;
 
 function fieldHtml(id: string, label: string, control: string, extra = '', cls = '', help = '', trail = '') {
   return `<div class="field ${cls}">
